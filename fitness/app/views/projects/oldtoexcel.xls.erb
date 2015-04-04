@@ -1,0 +1,180 @@
+<table border="1">
+  <thead>
+  <tr >
+
+    <th height="130" style="background-color:#e9e9e9;"><img src="http://www.italtile.co.za/skin/frontend/default/phoenix/images/Italtile_logo_retail.png" height='85'/></th>
+    <th boder="0" style="background-color:#e9e9e9;"></th>
+    <th colspan="5" boder="0" style="font-size:20px;background-color:#e9e9e9;">Reference Number - <% if @project.present?%>  <%=  @project.projectName%><%end%></th>
+  </tr>
+  <tr >
+    <th>Representative:	</th>
+    <th colspan="6" style="text-align: left;"> <% if @users.email.present?%><%= @users.fullName %><%end%></th>
+  </tr>
+  <tr >
+
+    <th>Mobile No:	</th>
+    <th colspan="6" style="text-align: left;"><% if @excelaccount.present?%><%= @excelaccount.phone.to_s %> <%end%></th>
+
+
+  </tr>
+  <tr >
+
+    <th >Email:	</th>
+    <th colspan="6" style="text-align: left;"><% if @excelaccount.present?%><%= @excelaccount.email %><%end%> </th>
+
+
+  </tr>
+  <tr>
+    <th>Date:</th>
+    <th colspan="6" style="text-align: left;"><%= Date.today %> </th>
+  </tr>
+  <tr>
+    <th colspan="7" style="text-align:center;">* Quote valid for 1 week from issue</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr >
+    <th style="background-color:#999999;color:#fff;">Image</th>
+    <th style="background-color:#999999; color:#fff;">Title</th>
+    <th style="background-color:#999999; color:#fff;">SKU</th>
+    <% if @project.exvat == false %>
+        <th style="background-color:#999999;color:#fff;">Unit Price</th>
+    <%else %>
+        <th style="background-color:#999999;color:#fff;">Unit Price ex.vat.</th>
+    <% end %>
+    <th style="background-color:#999999;color:#fff;">Qty</th>
+    <th style="background-color:#999999;color:#fff;">SUOM</th>
+    <th style="background-color:#999999;color:#fff;">Total Price</th>
+  </tr>
+
+  <%  @sections.each do |section|   %>
+      <% if section.name.blank? %>
+          <% for subsection in section.subsections %>
+              <% for lineitem in subsection.lineitems  %>
+
+
+                  <tr>
+                    <% if lineitem.price.present? == true%>
+                        <% @totals ||= [] %>
+
+                        <% @totals.push(lineitem.price * lineitem.quantity.to_i) %>
+                        <% @total = number_to_currency(@totals.inject{|sum,x| sum + x }, unit: "R") %>
+                    <% end %>
+                    <% if  lineitem.exvat_price.present? == true%>
+                        <% @exvattotals ||= [] %>
+                        <% @exvattotals.push(lineitem.exvat_price * lineitem.quantity.to_i) %>
+                        <% @subtotal = number_to_currency(@exvattotals.inject{|sum,x| sum + x }, unit: "R") %>
+                    <% end %>
+                    <td style="height:65px">
+                      <%= image_tag(lineitem.image, :height => 65) if lineitem.image.present? %><span>
+                    </td>
+                    <td width="200"><%= lineitem.title %></td>
+                    <td width="200"><%= lineitem.sku %></td>
+                    <% if @project.exvat == true %>
+                        <td width="100"><span class="price"><%= lineitem.exvat_price.to_i %> </span></td>
+                    <%else %>
+                        <td width="100"><span class="price"><%= lineitem.price.to_i %></span></td>
+                    <% end %>
+                    <td width="50"><%= lineitem.quantity %></td>
+                    <td width="200">
+                      <%= lineitem.suom %>
+                    </td>
+
+                    <% if @project.exvat == true %>
+                        <td width="150"><span class="price"><%= lineitem.exvat_price.to_i * lineitem.quantity.to_i %> </span></td>
+
+                    <%else %>
+                        <td width="150"><span class="price"><%= lineitem.price * lineitem.quantity.to_i %></span></td>
+                    <% end %>
+
+                  </tr>
+              <% end %>
+          <% end %>
+      <% else %>
+          <tr >
+            <th style="background-color:#999999;color:#fff;">Image</th>
+            <th style="background-color:#999999; color:#fff;">Title</th>
+            <th style="background-color:#999999; color:#fff;">SKU</th>
+            <% if @project.exvat == true %>
+                <th style="background-color:#999999;color:#fff;">Unit Price</th>
+            <%else %>
+                <th style="background-color:#999999;color:#fff;">Unit Price ex.vat.</th>
+            <% end %>
+            <th style="background-color:#999999;color:#fff;">Qty</th>
+            <th style="background-color:#999999;color:#fff;">Unit of measure</th>
+            <th style="background-color:#999999;color:#fff;">Total Price</th>
+          </tr>
+
+          <%  @sections.each do |section|   %>
+              <% if section.name.blank? %>
+              <% else %>
+                  <tr><td colspan="7" style="background-color:#444444;color:#fff; font-size:14px"><%=section.name%></td></tr>
+                  <% for subsection in section.subsections %>
+                      <tr><td colspan="7" style="background-color:#999999;color:#fff;font-size:14px "><%=subsection.name%></td></tr>
+                      <% for lineitem in subsection.lineitems  %>
+
+
+                          <tr>
+                            <% if lineitem.price.present? == true %>
+                                <% @totals ||= [] %>
+
+                                <% @totals.push(lineitem.price * lineitem.quantity.to_i) %>
+                                <% @total = number_to_currency(@totals.inject{|sum,x| sum + x }, unit: "R") %>
+                            <% end %>
+                            <% if  lineitem.exvat_price.present? == true%>
+                                <% @exvattotals ||= [] %>
+                                <% @exvattotals.push(lineitem.exvat_price * lineitem.quantity.to_i) %>
+                                <% @subtotal = number_to_currency(@exvattotals.inject{|sum,x| sum + x }, unit: "R") %>
+                            <% end %>
+                            <td width="100" height="60" style="padding:30px 20px;">
+                              <%= image_tag(lineitem.image, :width => 45) if lineitem.image.present? %>
+                            </td>
+                            <td width="200"><%= lineitem.title %></td>
+                            <td width="200"><%= lineitem.sku %></td>
+                            <% if @project.exvat == true %>
+                                <td width="100"><span class="price"><%= lineitem.exvat_price.to_i %> </span></td>
+
+                            <%else %>
+                                <td width="100"><span class="price"><%= lineitem.price.to_i %></span></td>
+                            <% end %>
+                            <td width="50"><%= lineitem.quantity %></td>
+                            <td width="200">
+                              <%= lineitem.suom %>
+                            </td>
+                            <% if @project.exvat == true %>
+                                <td width="100"><span class="price"><%= lineitem.exvat_price.to_i * lineitem.quantity.to_i %> </span></td>
+
+                            <% else %>
+                                <td width="100"><span class="price"><%= lineitem.price * lineitem.quantity.to_i %></span></td>
+                            <% end %>
+
+
+                          </tr>
+                      <% end %>
+                  <% end %>
+              <% end %>
+          <% end %>
+      <% end %>
+  <% end %>
+  </tbody>
+
+  <tfooter>
+    <tr><td colspan="7" style="background-color:#444444;color:#fff; font-size:14px"></td></tr>
+    <tr>
+      <td colspan="5"></td>
+      <td colspan="1">Sub Total:</td>
+      <td class="1"><%= @subtotal %></td>
+    </tr>
+    <tr>
+      <td colspan="5"></td>
+      <td colspan="1">Vat:</td>
+      <td class="1">14%</td>
+    </tr>
+    <tr>
+      <td colspan="5"></td>
+      <td colspan="1"><h3>Total:</h3></td>
+      <td class="1"><h3><%= @total %></h3></td>
+    </tr>
+  </tfooter>
+</table>

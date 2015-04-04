@@ -1,0 +1,667 @@
+<style>
+    .white {color:white !important;}
+</style>
+<br/>
+<br/>
+<button data-toggle="modal" onclick="view1()"  type="button" class="btn btn-lg btn-default">
+  <i class="fa fa-pencil"></i>
+  50/50 view
+</button>
+<button data-toggle="modal" onclick="view2()" type="button" class="btn btn-lg btn-default">
+  <i class="fa fa-pencil"></i>
+  70/30 view
+</button>
+<button data-toggle="modal" onclick="view3()"  type="button" class="btn btn-lg btn-default">
+  <i class="fa fa-pencil"></i>
+  Full view
+</button>
+<% flash.each do |key, value| %>
+    <div class="<%= flash_class(key) %>">
+      <%= value %>
+    </div>
+<% end %>
+
+
+<div class="row">
+
+  <div id="left" class="col-lg-6">
+    <br/>
+
+    <div class="panel panel-default">
+      <div class="panel-heading darkblue">
+        <h3 class="panel-title">Version</h3>
+      </div>
+      <div class="panel-body">
+        <div class="input-group">
+          <select class="form-control">
+            <option value="volvo">Version 1.0 (XXXX) 6/6/14 08h30</option>
+            <option value="saab">Version 1.5 (XXXX) 6/6/14 08h30</option>
+            <option value="mercedes">Version 2.0 (XXXX) 6/6/14 08h30</option>
+            <option value="audi">Version 3.0 (XXXX) 6/6/14 08h30</option>
+          </select>
+
+
+        </div><!-- /input-group -->
+      </div>
+    </div> <!-- Panel -->
+  </div><!-- /.col-lg-8 -->
+
+
+  <div id="right" class="col-lg-6">
+    <br/>
+    <div class="panel panel-default">
+      <div class="panel-heading darkblue">
+        <h2 class="panel-title">Search</h2>
+      </div>
+      <div class="panel-body">
+        <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <button style="margin-top:8px" data-toggle="modal" onclick="pro()" data-target="#myModal" type="button" class="btn  btn-primary">
+          <i class="fa fa-pencil"></i>
+          ADD Product
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div><!-- /.row -->
+<!-- Fixed navbar -->
+
+<div class="row">
+
+<div id="left" class="col-md-6">
+  <div class="panel panel-default">
+    <div class="panel-heading darkblue">
+      <h2 class="panel-title">Projects</h2>
+    </div>
+    <div class="panel-body">
+
+
+      <div class="col-md-4">
+        <h5>Customer:</h5>
+      </div>
+      <div  class="col-md-8">
+        <div class="input-group">
+          <select id="mySelect" class="form-control">
+            <option value="">Sun International</option>
+
+          </select>
+        </div>
+        <br/>
+      </div>
+
+      <div  class="col-md-4">
+        <h5>Name:</h5>
+      </div>
+
+      <div  class="col-md-8">
+        <div class="input-group">
+          <input type="text" value="Boardwalk" class="form-control">
+        </div>
+        <br/>
+        <br/>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading darkblue">
+        <h2 class="panel-title">Sections</h2>
+      </div>
+      <div class="panel-body">
+        <p>
+          <button data-toggle="modal" onclick="project()" data-target="#myModal" type="button" class="btn btn-lg btn-success">
+            <i class="fa fa-pencil"></i>
+            Edit Project
+          </button>
+          <button data-toggle="modal" onclick="section()" data-target="#myModal" type="button" class="btn btn-lg btn-primary">
+            <i class="fa fa-plus"></i>
+            Section
+          </button>
+
+          <button data-toggle="modal" onclick="sub()" data-target="#myModal" type="button" class="btn btn-lg btn-info">
+            <i class="fa fa-plus"></i>
+            Subsection
+          </button>
+
+        </p>
+
+        <style>
+            .left .col-md-4 {
+                margin-bottom: 40px;
+            }
+            .right .col-md-6 {margin-bottom: 60px;}
+        </style>
+
+
+        <%  @sections.each do |section|   %>
+            <% if section.id == 2 %>
+            <% else %>
+                <div class="page-header" >
+                  <h4 style="background-color: #E6E6E6;clear:both;padding:15px 10px;margin-top: 20px;">Section: <%= section.name %>
+                    <span style="font-size: 8px;float:right;"><%= link_to 'E', edit_section_path(section) %></span>
+                    <span style="font-size: 8px;float:right;"><%= link_to 'D', section, method: :delete, data: { confirm: 'Are you sure?' } %></span>
+                  </h4>
+                </div>
+                <% for subsection in section.subsections %>
+                    <% if subsection.id == 2 %>
+                    <% else %>
+                        <div class="page-header">
+                          <h4 style="background-color: #F1F1F1;clear:both;padding:15px 10px;"> Sub Section: <%= subsection.name %>
+
+                            <span style="font-size: 8px;float:right;"><%= link_to 'D', subsection, method: :delete, data: { confirm: 'Are you sure?' } %></span>
+                          </h4>
+                        </div>
+                        <table>
+                          <thead>
+                          <th width="100"></th>
+                          <th>Title</th>
+                          <th >SKU</th>
+                          <th >Description</th>
+
+                          <th >Price</th>
+
+                          </thead>
+
+                          <tbody>
+                          <hr/>
+                          <% for product in subsection.products  %>
+                            <tr>
+                              <td width="20%"><%= image_tag(product.image, :width => 40) if product.image.present? %></td>
+                              <td width="20%"><%= product.title %></td>
+                              <td width="15%"><%= product.sku %></td>
+                              <td width="25%"><%= product.description %></td>
+
+                              <td width="20%"><%= product.price %></td>
+                              <td width="20%"><span style="font-size: 8px;float:right;"><%= link_to 'D', product, method: :delete, data: { confirm: 'Are you sure?' } %></span></td>
+
+                            </tr>
+                          <% end %>
+
+                          </tbody>
+                        </table>
+
+
+
+
+                    <% end %>
+                <% end %>
+            <% end %>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div id="right" class="col-md-6">
+  <div class="panel panel-default">
+    <div class="panel-heading darkblue">
+      <h2 class="panel-title">Products</h2>
+    </div>
+    <div class="panel-body">
+      <ul class="nav nav-tabs" role="tablist" id="myTab">
+        <li class="active"><a href="#home" role="tab" data-toggle="tab">Recently</a></li>
+        <li><a href="#profile" role="tab" data-toggle="tab">Tiles</a></li>
+        <li><a href="#messages" role="tab" data-toggle="tab">Basins</a></li>
+        <li><a href="#settings" role="tab" data-toggle="tab">Bath</a></li>
+        <li><a href="#other" role="tab" data-toggle="tab">Other</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <div class="tab-pane active" id="home">
+
+          <% @products.each do |product| %>
+              <% if product.catagory == "Recent" %>
+              <div  class="col-md-6">
+                <h3><%= product.title %></h3>
+                <p><%= image_tag(product.image, :width => 150) if product.image.present? %></p>
+                <p><%= product.sku %></p>
+                <p><%= product.price %></p>
+                <p><%= product.description %></p>
+                <p><%= link_to "add",edit_product_path(product), :class => "btn btn-default pull-right product", :remote => true ,"data-toggle" => "modal", "data-target" => "#productModal" %></p>
+              </div>
+              <% else %>
+              <% end %>
+          <% end %>
+        </div>
+        <div class="tab-pane" id="profile">
+
+          <% @products.each do |product| %>
+              <% if product.catagory == "Tile" %>
+                  <div  class="col-md-6">
+                    <h3><%= product.title %></h3>
+                    <p><%= image_tag(product.image, :width => 150) if product.image.present? %></p>
+                    <p><%= product.sku %></p>
+                    <p><%= product.price %></p>
+                    <p><%= product.description %></p>
+                    <p><%= link_to 'Add', edit_product_path(product), :class => 'btn btn-default pull-right' %></p>
+                  </div>
+              <% else %>
+              <% end %>
+          <% end %>
+
+        </div>
+        <div class="tab-pane" id="messages">
+          <% @products.each do |product| %>
+              <% if product.catagory == "Basins" %>
+              <div  class="col-md-6">
+                <h3><%= product.title %></h3>
+                <p><%= image_tag(product.image, :width => 150) if product.image.present? %></p>
+                <p><%= product.sku %></p>
+                <p><%= product.price %></p>
+                <p><%= product.description %></p>
+                <p><%= link_to 'Add', edit_product_path(product), :class => 'btn btn-default pull-right' %></p>
+              </div>
+              <% else %>
+              <% end %>
+          <% end %>
+        </div>
+        <div class="tab-pane" id="settings">
+          <% @products.each do |product| %>
+              <% if product.catagory == "Bath" %>
+              <div  class="col-md-6">
+                <h3><%= product.title %></h3>
+                <p><%= image_tag(product.image, :width => 150) if product.image.present? %></p>
+                <p><%= product.sku %></p>
+                <p><%= product.price %></p>
+                <p><%= product.description %></p>
+                <p><%= link_to 'Add', edit_product_path(product), :class => 'btn btn-default pull-right' %></p>
+              </div>
+              <% else %>
+              <% end %>
+          <% end %>
+        </div>
+        <div class="tab-pane" id="other">
+          <% @products.each do |product| %>
+              <% if product.catagory == "Other" %>
+                  <div  class="col-md-6">
+                    <h3><%= product.title %></h3>
+                    <p><%= image_tag(product.image, :width => 150) if product.image.present? %></p>
+                    <p><%= product.sku %></p>
+                    <p><%= product.price %></p>
+                    <p><%= product.description %></p>
+                    <p><%= link_to 'Add', edit_product_path(product), :class => 'btn btn-default pull-right' %></p>
+                  </div>
+              <% else %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <script>
+          $(function () {
+              $('#myTab a:last').tab('show');
+              alert($('#testlink')[0].getAttribute('href'););
+          })
+      </script>
+
+
+    </div>
+  </div>
+
+</div>
+
+
+<div class="btn-group btn-group-justified">
+  <div class="btn-group">
+
+    <%= link_to 'Print Quote',  data_show_path(@section, :format => 'pdf'),:class => "btn btn-lg btn-primary white", "target"=>"_blank" %>
+  </div>
+  <div class="btn-group">
+    <button type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#emailModal"> <i class="fa fa-plus"></i>
+      Email Quote</button>
+  </div>
+  <div class="btn-group">
+    <button type="button" class="btn btn-lg btn-info" data-toggle="modal" data-target="#crmModal"> Save to CRM</button>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div  class="modal-body">
+        <div id="thebody"></div>
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" style="color:red !important;" value="">
+            <p>No Installation products needed</p>
+          </label>
+          </div>
+        <div class="checkbox">
+
+            <table>
+            <tr>
+              <td>
+                <label>
+                  <input type="checkbox" style="margin-top:-15px" value="">
+                </label>
+              </td>
+              <td width="20%">
+                <img width="40" src="/uploads/product/image/12/2147483647_19206_copy.jpg" alt="2147483647 19206 copy">
+              </td>
+              <td width="20%">Sand</td>
+              <td width="15%">ITA0014</td>
+              <td width="25%"></td>
+              <td width="20%">R60</td>
+              <td width="20%">
+            </tr>
+            </table>
+
+        </div>
+        <div class="checkbox">
+          <table>
+            <tr>
+              <td>
+                <label>
+                  <input type="checkbox" style="margin-top:-15px" value="">
+                </label>
+              </td>
+
+              <td width="20%">
+                <img width="40" src="/uploads/product/image/13/021711091109_9002_19209.jpg" alt="2147483647 19206 copy">
+              </td>
+              <td width="20%">Filler</td>
+              <td width="15%">ITA0016</td>
+              <td width="25%"></td>
+              <td width="20%">R80</td>
+              <td width="20%">
+            </tr>
+            </tr>
+          </table>
+
+        </div>
+        <div class="checkbox">
+          <table>
+            <tr>
+              <td>
+                <label>
+                  <input type="checkbox" style="margin-top:-15px" value="">
+                </label>
+              </td>
+
+              <td width="20%">
+                <img width="40" src="/uploads/product/image/14/2147483647_22100.jpg" alt="2147483647 22100">
+              </td>
+              <td width="20%">Filler</td>
+              <td width="15%">ITA0016</td>
+              <td width="25%"></td>
+              <td width="20%">R80</td>
+              <td width="20%">
+            </tr>
+            </tr>
+          </table>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal EMail -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Email</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="efirst">
+          <h4>Select Email type</h4>
+          <select>
+            <option value="">Please select</option>
+            <option value="">Technical Spec</option>
+            <option value="">Spec without Pricing</option>
+            <option value="">Excel Spec</option>
+            <option value="">Consolidated Spec</option>
+          </select>
+          <br/>
+          <br/>
+
+          <h4>Please enter email below.</h4>
+
+          <div class="row">
+            <div class="col-md-4">
+              <input type="text" width="800" />
+            </div>
+            <div class="col-md-8" onclick="show2();">
+              <i class="fa fa-plus"></i>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <br/>
+
+            <div class="col-md-4">
+              <input class="show2" type="text"  width="800" />
+            </div>
+            <div class="show2 col-md-8" onclick="show3();">
+              <i class="fa fa-plus"></i>
+            </div>
+          </div>
+          <div class="row">
+            <br/>
+            <div class="col-md-4">
+              <input id="show3" type="text" width="650" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <textarea rows="4" cols="50">
+              </textarea>
+            </div>
+          </div>
+
+          <script>
+              $('.show2').hide();
+              $('#show3').hide();
+              function show2(){$('.show2').show();}
+              function show3(){$('#show3').show();}
+          </script>
+        </div>
+        <div class="esecond"><img src="/loading_icon.gif" height="120"/></div>
+        <div class="ethird" style="color:green;">Email was successfully sent.</div>
+        <br/>
+        <br/>
+        <br/>
+
+        <p><button  type="button" class="btn btn-default" id="erun">Confirm</button></p>
+
+        <script>
+            $( ".esecond" ).hide();
+            $( ".ethird" ).hide();
+            $( "#erun" ).click(function() {
+
+                $( ".efirst" ).hide();
+                $( ".esecond" ).show();
+                setTimeout(function() {
+                    $( ".esecond" ).hide();
+                    $( ".ethird" ).show();
+                    $( "#erun" ).hide();
+                }, 3000);
+
+            });
+        </script>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal CRM-->
+<div class="modal fade" id="crmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Save to CRM</h4>
+      </div>
+      <div class="modal-body">
+
+
+        <div class="first">Are you sure you want to save to CRM ?</div>
+        <div class="second"><img src="/loading_icon.gif" height="120"/></div>
+        <div class="third" style="color:green;">You have successfully saved to CRM.</div>
+        <br/>
+        <br/>
+        <br/>
+        <p><button type="button" class="btn btn-default" id="run">Confirm</button></p>
+
+        <script>
+            $( ".second" ).hide();
+            $( ".third" ).hide();
+            $( "#run" ).click(function() {
+
+                $( ".first" ).hide();
+                $( ".second" ).show();
+                setTimeout(function() {
+                    $( ".second" ).hide();
+                    $( ".third" ).show();
+                    $( "#run" ).hide();
+                }, 3000);
+
+            });
+        </script>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+    $('[data-toggle="popover"]').popover();
+    $('body').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
+
+</script>
+</div>
+<!-- /container -->
+<script>
+    function section() {
+        $(".modal-body").html("<%= escape_javascript(render 'sections/form') %>");
+        $("#myModalLabel").html("Add New Section");
+
+    }
+    function project() {
+        $(".modal-body").html("<%= escape_javascript(render 'projects/form') %>");
+        $("#myModalLabel").html("Edit Project");
+    }
+    function sub() {
+        $(".modal-body").html("<%= escape_javascript(render 'subsections/form') %>");
+        $("#myModalLabel").html("Add New Subsection");
+    }
+    function pro() {
+        $(".modal-body").html("<%= escape_javascript(render 'products/form') %>");
+        $("#left").html("Add New Product");
+    }
+    function view1() {
+        $('[id=right]').show();
+        $('[id=left]').removeClass('col-lg-8').addClass('col-lg-6');
+        $('[id=right]').removeClass('col-lg-4').addClass('col-lg-6');
+    }
+    function view2() {
+        $('[id=right]').show();
+        $('[id=left]').removeClass('col-lg-6').addClass('col-lg-8');
+        $('[id=right]').removeClass('col-lg-6').addClass('col-lg-4');
+    }
+    function view3() {
+        $('[id=right]').hide();
+        $('[id=left]').removeClass('col-lg-6').addClass('col-lg-12');
+        $('[id=right]').removeClass('col-lg-6').addClass('col-lg-12');
+        $('[id=left]').removeClass('col-lg-8').addClass('col-lg-12');
+        $('[id=right]').removeClass('col-lg-4').addClass('col-lg-12');
+    }
+
+
+    /*
+     *o Favourites
+     o Tiles
+     o Taps
+     o Accessories
+     o Sanitary ware
+     o Décor
+     o Furniture
+     o Showers
+     o Other
+     *
+     */
+    $("#thebody").html("<%= escape_javascript(render 'products/form') %>");
+</script>
+
+

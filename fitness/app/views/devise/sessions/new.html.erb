@@ -1,0 +1,25 @@
+<div id="login">
+  <div class="well">
+<h2>Welcome to iSpec</h2>
+
+<p id="heading" >Please Login to continue.</p>
+<p class="required-field-caption">&ast; Required Fields</p>
+<hr noshade>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div><%= f.label :email %><br />
+  <%= f.email_field :email, autofocus: true %><span>&nbsp;&ast;</span></div>
+
+  <div><%= f.label :password %><br />
+    <%= f.password_field :password, autocomplete: "off" %><span>&nbsp;&ast;</span></div>
+
+  <% if devise_mapping.rememberable? -%>
+    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+  <% end -%>
+<br/>
+  <div><%= f.submit "Log in" ,:class => "btn btn-primary" %></div>
+<% end %>
+      <hr noshade>
+<%= render "devise/shared/links" %>
+</div>
+</div>

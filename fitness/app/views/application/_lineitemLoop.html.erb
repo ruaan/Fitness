@@ -1,0 +1,61 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <th>Image</th>
+            <th>Title</th>
+            <th>SKU</th>
+            <th>Qty</th>
+            <th>SUOM</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <td></td>
+
+        </thead>
+        <tbody>
+        <% for lineitem in subsection.lineitems  %>
+            <tr>
+              <% if lineitem.price.present? == true%>
+              <% @totals ||= [] %>
+
+              <% @totals.push(lineitem.price * lineitem.quantity.to_i) %>
+              <% @total = number_to_currency(@totals.inject{|sum,x| sum + x }, unit: "R") %>
+              <% end %>
+              <% if  lineitem.exvat_price.present? == true%>
+
+              <% @exvattotals ||= [] %>
+                  <% @exvattotals.push((lineitem.price * 100 /114) * ( lineitem.quantity.to_i)) %>
+              <% @subtotal = number_to_currency(@exvattotals.inject{|sum,x| sum + x }, unit: "R") %>
+              <% end %>
+                    <td><%= image_tag(lineitem.image, :width => 70) if lineitem.image.present? %></td>
+                <td><%= lineitem.title %></td>
+                <td><%= lineitem.sku %></td>
+                <td><%= best_in_place lineitem, :quantity, :as => :input %></td>
+              <td><%= lineitem.suom %></td>
+
+
+              <% if @project.exvat == true %>
+                  <td><span class="price"><%= number_to_currency(lineitem.exvat_price, unit: "R") %> ex.vat.</span></td>
+
+              <%else %>
+                  <td><span class="price"><%= number_to_currency(lineitem.price, unit: "R") %></span></td>
+              <% end %>
+
+                <% if @project.exvat == true %>
+                  <td><span class="price"><%= number_to_currency(lineitem.exvat_price.to_i * lineitem.quantity.to_i, unit: "R") %> ex.vat.</span></td>
+
+            <%else %>
+                <td><span class="price"><%= number_to_currency(lineitem.price * lineitem.quantity.to_i, unit: "R") %></span></td>
+                <% end %>
+
+
+
+            <td class="text-right">
+                    <%= link_to 'Edit', edit_lineitem_path(lineitem.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-success btn-xs" %>
+                    <%= link_to 'Delete', lineitem,'data-method' => :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-md btn-danger btn-xs white" %>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+

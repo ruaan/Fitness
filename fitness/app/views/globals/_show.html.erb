@@ -1,0 +1,73 @@
+
+<h1>Listing globals</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th>Subsection</th>
+      <th>Image</th>
+      <th>Title</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Subdescripion</th>
+      <th>Price</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+	 
+    <% @globals.each do |global| %>
+ <% if @favcheck == global.name%>
+ <% else%>
+    <tr>
+      <td><%= global.name %></td>
+    
+    <td><%= link_to 'Destroy', global, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	<%= @sectioncheck = "" %>
+	<%= @favcheck = global.name %>
+    </tr>
+	<% end %>
+	 <% if @sectioncheck == global.section%>
+	 <td><%= link_to 'Edit', edit_global_path(global,:favname => "hello", :projectid => @project.id) %></td>
+	 <% else%>
+      <tr>
+        <td><%= global.section %></td>
+		<%= @subcheck = "" %>
+		<%= @sectioncheck = global.section%>
+      
+	  </tr>
+	  <% end %>
+ 	 <% if @subcheck == global.subsection%>
+ 	 <% else %>
+	  <tr>
+        <td><%= global.subsection %></td>
+		<%= @subcheck = global.subsection%>
+	  </tr>	
+	  <% end %>
+	  <tr>
+        <td><%= global.image %></td>
+        <td><%= global.title %></td>
+        <td><%= global.name %></td>
+        <td><%= global.description %></td>
+        <td><%= global.subdescripion %></td>
+        <td><%= global.price %></td>
+      </tr>
+
+        
+        
+
+            </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+
+
+<%= link_to 'New Global', new_global_path %>
+

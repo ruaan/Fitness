@@ -1,0 +1,41 @@
+
+<%= form_for(account, remote: false) do |f| %>
+  <% if @account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@account.errors.count, "error") %> prohibited this account from being saved:</h2>
+
+      <ul>
+      <% @account.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+    <%= hidden_field_tag :projectid, @project.id %>
+    <%= f.hidden_field :user_id %>
+  <div class="field">
+    <%= f.label "Customer NAme:" %><br>
+    <%= f.text_field :name, required:true %>
+  </div>
+  <div class="field">
+    <%= f.label "Phone Number:" %><br>
+    <%= f.text_field :phone%>
+  </div>
+  <div class="field">
+    <%= f.label "Email Address:" %><br>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label "Physical Address:" %><br>
+    <%= f.text_field :address, :onFocus=>"geolocate()" %>
+  </div>
+  <div class="field">
+    <%= f.label "Vat Number:" %><br>
+    <%= f.text_field :vat %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Save Customer" %>
+  </div>
+
+<% end %>
+

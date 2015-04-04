@@ -1,0 +1,170 @@
+<%= render "application/menuLeft" %>
+<%= render "application/menuRight" %>
+<%= render "application/bottomInfo" %>
+
+<div id="middlepage" class="row" style="max-width: 90%; margin:auto;">
+<div class="col-md-12">
+  <%= render "application/flashandLogin" %>
+
+<div class="create-buttons">
+  <%= link_to data_saveOpenQuote_path(:project_id => @project.id), :class=>"btn btn-md btn-info white" do %>
+    <i class="fa fa-plus"></i> New Quote</a>
+  <% end %>
+    <% if can? :create , @projects %>
+
+            <%= link_to new_product_path(@product, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-md btn-danger white" do %>
+                <i class="fa fa-plus"></i> New Product
+            <% end %>
+      <%= link_to import_path, 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-md btn-success white" do %>
+          <i class="fa fa-plus"></i> New Magento
+      <% end %>
+
+
+<% end %>
+</div>
+  <div  class="quote-panel" style="min-height:900px;">
+
+        <div class="panel panel-default" >
+          <div class="panel-heading darkblue">
+            <h2 class="panel-title">Sections</h2>
+          </div>
+          <div id="load" class="panel-body">
+              <%= render "application/sectionButtons" %>
+            <% @sections = Section.where(project_id:@project.id).all %>
+
+            <%  @sections.each do |section|   %>
+                <% if section.name.blank? %>
+
+                    <% for subsection in section.subsections %>
+                        
+                        <%= render 'application/lineitemLoop', subsection: subsection %>
+                    <% end %>
+                <% else %>
+
+                    <div class="header-title">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h4> <span class="sub-title">Section: <%= section.name %></span>  <%= section.description %></h4>
+                            </div>
+                            <div class="col-sm-4 text-right">
+                                <%= link_to new_global_path({:section_id => section.id, :project_id => @project.id}), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-default btn-xs" do %><i class="fa fa-plus"></i> Favourites<% end %>
+                                <%= link_to 'Edit', edit_section_path(section.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-success btn-xs" %>
+                                <%= link_to 'Copy',  new_copysec_path({:section_id => section.id, :project_id => @project.id}), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs" %>
+                                <%= link_to 'Delete', section, method: :delete, data: { confirm: 'Are you sure?' },:class => "btn btn-danger btn-xs" %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide-collapse">
+                      <div class="slide-content">
+                    <% for subsection in section.subsections %>
+                        <% if subsection.name.blank? %>
+
+                        <% else %>
+
+							<% copyid = subsection.id %>
+                            <div id="subsection">
+                                <div class="page-header">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <h4><span class="sub-title">Sub Section: <%= subsection.name %> </span>  <%= subsection.description %></h4>
+                                        </div>
+                                        <div class="col-sm-4 text-right">
+                                            <%= link_to 'Edit', edit_subsection_path(subsection.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-success btn-xs" %>
+                                            <%= link_to 'Copy',  new_copysub_path({:meid => subsection.id, :project_id => @project.id}), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs" %>
+                                            <%= link_to 'Delete', subsection, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-md btn-danger btn-xs white" %>
+                                        </div>
+                                    </div>
+                                </div>
+                              <%= render 'application/lineitemLoop', subsection: subsection %>
+                            </div>
+                       	 	<% end %>
+                        <% end %>
+                    <% end %>
+                <% end %>
+
+            </div>
+            <hr/>
+            <% if @project.exvat == true %>
+                <div class="col-xs-12" style="Border-top:1px solid black;margin-top:10px;">  </div>
+                <div class="col-xs-10 text-right"><h3>Total:</h3></div>
+                <div class="col-xs-2"><h3><%= @subtotal %> ex. VAT</h3></div>
+                <% else %>
+            <div class="col-xs-10 text-right">Sub Total:</div>
+            <div class="col-xs-2"><%= @subtotal %></div>
+            <div class="col-xs-10 text-right">Vat:</div>
+            <div class="col-xs-2">14%</div>
+            <div class="col-xs-12" style="Border-top:1px solid black;margin-top:10px;">  </div>
+            <div class="col-xs-10 text-right"><h3>Total:</h3></div>
+            <div class="col-xs-2"><h3><%= @total %></h3></div>
+            <% end %>
+            </div>
+
+
+    </div>
+
+
+</div>
+
+
+<%= render 'application/modal' %>
+
+
+
+</div>
+</div>
+<script>
+    function clearmodal() {
+        $('#testnow').data('bs.modal', null);
+        $('#new_modal').data('bs.modal', null);
+
+    }
+
+    function section() {
+        clearmodal();
+        $(".modal-content").html("<%= escape_javascript(render 'sections/form') %>");
+
+
+    }
+    function global(sectionid) {
+        clearmodal();
+        $(".modal-content").html("<%= escape_javascript(render 'globals/add' ) %>");
+
+    }
+
+    function fav() {
+        clearmodal();
+        $(".modal-content").html("<%= escape_javascript(render 'globals/showfav') %>");
+
+    }
+    function project() {
+        clearmodal();
+        $(".modal-content").html("<%= escape_javascript(render 'projects/form') %>");
+
+    }
+    function sub() {
+        clearmodal();
+        $(".modal-content").html("<%= escape_javascript(render 'subsections/form') %>");
+
+    }
+    function pro() {
+        clearmodal();
+        $(".modal-content").html("<%= escape_javascript(render 'products/form') %>");
+
+    }
+    function editsec() {
+        clearmodal()
+        $(".modal-content").html("<%= escape_javascript(render 'sections/edit') %>");
+
+    }
+
+    $('#project_id').bind('change', function () {
+        var url = "/projects/" + $(this).val();
+        if (url) {
+            window.location.replace(url);
+        }
+        return false;
+    });
+
+</script>
+

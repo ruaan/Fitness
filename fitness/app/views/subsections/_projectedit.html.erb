@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="clearmodal();" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Edit Sub-Section</h4>
+</div>
+<div class="modal-body">
+<%= form_for(@subsection) do |f| %>
+  <% if @subsection.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@subsection.errors.count, "error") %> prohibited this subsection from being saved:</h2>
+
+      <ul>
+      <% @subsection.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="field">
+      <%= f.label :section_id %><br>
+      <%= f.collection_select(:section_id, Section.where(project_id: params[:project_id]), :id, :name) %>
+    </div>
+  <div class="field">
+    <%= f.label 'Subsection Name' %><br>
+    <%= f.text_field :name %><p>E.g. Bathroom</p>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+    <br/>
+
+    <div class="actions">
+        <button type="button" onclick="clearmodal();" class="btn btn-default" data-dismiss="modal">Close</button>
+
+        <%= f.submit  "Update Subsection" , :class => "btn btn-primary"%>
+    </div>
+          </div>
+<% end %>

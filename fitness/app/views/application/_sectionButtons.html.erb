@@ -1,0 +1,38 @@
+<div id="row" class="row">
+  <div class="col-md-2">
+  Version Control</p>
+  <%= form_for(@project) do |f| %>
+      <%= f.collection_select :id, Project.where(projectName: @projects.projectName), :id, :version, :selected => params['id'] %>
+
+  <% end %>
+</div>
+<div class="col-md-1">
+  <%= link_to 'New Version',  new_version_path(@version, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary" %>
+</div>
+<div class="col-md-4"> </div>
+<div class="col-md-5 text-right">
+  <button data-toggle="modal" onclick="section()" data-target="#new_modal" type="button" class="btn btn-md btn-primary">
+    <i class="fa fa-plus"></i>
+    Section
+  </button>
+
+  <button data-toggle="modal" onclick="sub()" data-target="#new_modal" type="button" class="btn btn-md btn-info">
+    <i class="fa fa-plus"></i>
+    Subsection
+  </button>
+  <button data-toggle="modal" onclick="fav()" data-target="#new_modal" type="button" class="btn btn-md btn-default">
+    <i class="fa fa-plus"></i>
+    Favourites
+  </button>
+  <p style="margin-top:5px;">E.g. First Floor  |  E.g. Bathroom</p>
+</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="new_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
+<br/>

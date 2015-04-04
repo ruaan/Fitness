@@ -1,0 +1,17 @@
+<%= form_for(@magentopush) do |f| %>
+  <% if @magentopush.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@magentopush.errors.count, "error") %> prohibited this magentopush from being saved:</h2>
+
+      <ul>
+      <% @magentopush.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,21 @@
+<%= form_for(@soap) do |f| %>
+  <% if @soap.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@soap.errors.count, "error") %> prohibited this soap from being saved:</h2>
+
+      <ul>
+      <% @soap.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

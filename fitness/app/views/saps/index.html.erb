@@ -1,0 +1,36 @@
+<h1>Listing saps</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @saps.each do |sap| %>
+      <tr>
+        <td><%= sap.name %></td>
+        <td><%= link_to 'Show', sap %></td>
+        <td><%= link_to 'Edit', edit_sap_path(sap) %></td>
+        <td><%= link_to 'Destroy', sap, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<p><button type="button" id="me" class="btn btn-default">Login and Get</button></p>
+
+<script>
+    $('#me').on("click", function () {
+        var name = {
+            name: 'Jeff'
+        }
+
+// Post data via ajax to a rails controller
+        $.post('/saps', name);
+    });
+</script>
+<%= link_to 'New Sap', new_sap_path %>

@@ -1,0 +1,21 @@
+<%= form_for(@magento) do |f| %>
+  <% if @magento.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@magento.errors.count, "error") %> prohibited this magento from being saved:</h2>
+
+      <ul>
+      <% @magento.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :refNumber %><br>
+    <%= f.text_field :refNumber %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

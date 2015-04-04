@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ispec</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<body>
+<%= render 'application/modal' %>
+    <div class="container-fluid">
+        <div class="navbar navbar-inverse" role="navigation">
+            <div class="col-xs-6 header-logos">
+              <% if @getUser.present? %>
+              <% if @getUser.role == "com" || @getUser.role == "commercial" || @getUser.role == "comadmin" %>
+                  <%= image_tag "/comlogo.png", :height=>'123'%>
+              <% else %>
+                  <img class="italtile-logo" height="123" src="/logo-home.png"/>
+              <% end %>
+              <% else %>
+                  <img class="italtile-logo" height="123" src="/logo-home.png"/>
+              <% end %>
+
+                <img class="ispec-logo" height="63" src="/logo.png"/>
+            </div>
+            <div class="col-xs-6 text-right"></div>
+                 </div>
+    </div>
+
+    <div id="show" class="container-fluid theme-showcase" role="main">
+
+        <%= yield %>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<div class="cbp-spmenu cbp-spmenu-vertical right-tabs cbp-spmenu-right">
+  <div  class="row">
+    <div class="col-md-2 mainleft" >
+        <div class="menu-close hidden" href="#close" ><i class="fa fa-times fa-2x"></i></div>
+      <ul class="topspace">
+        <li class="icons"></li>
+
+        <li class="icons">
+          <a style="color:#fff" class="toggle-menu menu-right sap" onclick="moveSap()"><i class="fa fa-folder-open fa-2x"></i><div class="side-menu-right-item-caption">SAP</div></a>
+        </li>
+        <li class="icons">
+          <a style="color:#fff" class="toggle-menu menu-right web" onclick="moveWeb()"><i class="fa fa-globe fa-2x"></i><div class="side-menu-right-item-caption">Website</div></a>
+        </li>
+
+      </ul>
+    </div>
+    <div class="col-md-10 ">
+
+          <div id="sap" style="margin-right: 20px;">
+            <h3 style="margin-left: -20px;margin-right: -20px;">Pull Quote from SAP</h3>
+            <br/><br/>
+
+            <%= form_for(@sap, :remote => true) do |f| %>
+                <% if @sap.errors.any? %>
+                    <div id="error_explanation">
+                      <h2><%= pluralize(@sap.errors.count, "error") %> prohibited this sap from being saved:</h2>
+
+                      <ul>
+                        <% @sap.errors.full_messages.each do |message| %>
+                            <li><%= message %></li>
+                        <% end %>
+                      </ul>
+                    </div>
+                <% end %>
+
+
+                <div class="form-group">
+                  <label for="getpass">Username:</label>
+                  <%= text_field_tag :username, 'I905CASHIER1',:class=>"form-control"  %>
+                </div>
+                <div class="form-group">
+                  <label for="getpass">Password:</label>
+                  <%= text_field_tag :password,'TIVOLI',:class=>"form-control"  %>
+                </div>
+                <div class="form-group">
+                  <label for="getpass">Rep Code:</label>
+                  <%= text_field_tag :repCode,'5012',:class=>"form-control"   %>
+                </div>
+                <div class="form-group">
+                  <label for="getpass">Store Code:</label>
+                  <%= text_field_tag :storeCode,'I905',:class=>"form-control"   %>
+                </div>
+                <div class="form-group">
+                  <label for="getpass">Quote Number:</label>
+                  <%= text_field_tag :quoteNumber,1024359017,:class=>"form-control"   %>
+                </div>
+                <div class="actions">
+                  <%= f.submit "Get Quote", :class=>"btn btn-sap" %>
+                </div>
+            <% end %>
+           <div id="result" > </div>
+
+          </div>
+
+        <div id="web" style="margin-right: 20px;">
+          <h3 style="margin-left: -20px;margin-right: -20px;">Website Quote</h3>
+
+          <br/><br/>
+
+
+        <%= form_for(@magento, :remote=>true) do |f| %>
+            <% if @magento.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(@magento.errors.count, "error") %> prohibited this magento from being saved:</h2>
+
+                  <ul>
+                    <% @magento.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+            <% end %>
+
+            <div class="form-group">
+              <%= f.label :refNumber %><br>
+              <%= text_field_tag :refNumber,'634',:class=>"form-control" %>
+            </div>
+            <div class="actions">
+              <%= f.submit "Get Web Quote", :class=>"btn btn-sap" %>
+            </div>
+        <% end %>
+        <div id="magResult"></div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+        </div>
+    </div>
+
+<script>
+
+    function moveSap () { $('#sap').show();$('#web').hide();}
+    function moveWeb () { $('#web').show();$('#sap').hide();}
+    new_magento
+    $("#new_sap").bind("ajax:beforeSend", function() {
+        $("#result").html("Processing request.");
+    });
+  $("#new_sap").bind("ajax:success", function() {
+      $("#result").html("Quote was successful. Please wait for redirect to quote.");
+  });
+    $("#new_magento").bind("ajax:beforeSend", function() {
+        $("#magResult").html("Processing request.");
+    });
+    $("#new_magento").bind("ajax:success", function() {
+        $("#magResult").html("Quote was successful. Please wait for redirect to quote.");
+    });
+    $("#new_magento").bind("ajax:error", function(data,error) {
+        $("#magResult").html("Incorrect reference number.");
+    });
+</script>
+

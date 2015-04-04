@@ -1,0 +1,21 @@
+<div id="login">
+    <div class="well">
+        <h2>Forgot your password?</h2>
+        <p id="heading">Send me reset password instructions</p>
+        <p class="required-field-caption">&ast; Required Fields</p>
+        <hr noshade>
+
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+          <%= devise_error_messages! %>
+
+          <div><%= f.label :email %><br />
+          <%= f.email_field :email, autofocus: true %><span>&nbsp;&ast;</span></div>
+
+                <br/>
+          <div><%= f.submit "Send" ,:class => "btn btn-primary" %></div>
+        <% end %>
+
+        <hr noshade>
+        <%= render "devise/shared/links" %>
+    </div>
+</div>

@@ -1,0 +1,280 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="clearmodal();" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Add Product to Quote.</h4>
+</div>
+
+<div class="modal-body">
+  <%= form_for(@product, remote: true) do |f| %>
+      <% if @product.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+            <ul>
+              <% @product.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+      <% end %>
+      <div class="row add-margin-bottom">
+        <div  class="col-md-8">
+          <div class="form-group">
+            <%= image_tag(@product.image, :width => 250) if @product.image.present? %>
+          </div>
+        </div>
+        <div  class="col-md-4">
+          <div class="form-group">
+            <%= f.label :title, :readonly=>true %><br>
+            <%= f.text_field :title, :readonly=>true %>
+          </div>
+          <% if can? :update , @product %>
+              <div class="form-group">
+                <%= f.label :sku %><br>
+                <%= f.text_field :sku, :required => true  %>
+              </div>
+          <% else %>
+              <%= f.label :sku %><br>
+              <%= @product.sku %>
+          <% end %>
+          <% if can? :update , @product %>
+              <% if @product.catagory == '50' || @product.catagory == '63' || @product.catagory == '64' || @product.catagory == '65' || @product.catagory == '66' || @product.catagory == '119' %>
+                  <div class="form-group">
+                    <label>
+                      Quantity
+                      <% if @product.buom != '' %>
+                        in <%= @product.buom %>
+                      <% end %>
+                    </label>
+
+                    <%= text_field_tag :quantityfill,1,:required => true %>
+                        <%= hidden_field_tag :quantity  %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label "Price per m/2" %><br>
+                    <p id="pricem2"><%= number_with_precision(((@product.price) * (@product.umren.to_f / @product.umrez)).round(2), :precision => 2) %></p><br/>
+                    <p><span id="metersq"></span> m/2 will = <span id="boxsq"></span> boxes at </p>
+                    <%= f.label "Price per box" %><br>
+                    <%= text_field_tag :priceme,:step => 0.01,:required => true  %>
+                  </div>
+              <%  else%>
+                  <div class="form-group">
+                    <label>
+                      Quantity
+                      <% if @product.buom != '' %>
+                        in <%= @product.buom %>
+                      <% end %>
+                    </label>
+
+                    <%= text_field_tag :quantity,1,:required => true %>
+
+
+                  </div>
+                  <div class="form-group">
+                    <%= f.label "Price per item." %><br>
+                    <%= text_field_tag :price, number_with_precision(@product.price, :precision => 2) ,:step => 0.01,:required => true  %>
+                  </div>
+
+              <%end%>
+
+          <% else %>
+              <% if @product.catagory == '50' || @product.catagory == '63' || @product.catagory == '64' || @product.catagory == '65' || @product.catagory == '66' || @product.catagory == '119' %>
+                  <div class="form-group">
+                    <label>
+                      Quantity
+                      <% if @product.suom != '' %>
+                        in <%= @product.suom %>
+                      <% end %>
+                    </label>
+                    <%= text_field_tag :quantityfill,1,:required => true %>
+                    <%= hidden_field_tag :quantity,1  %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label "Price per m/2" %><br>
+                    <p id="pricem2"><%= number_with_precision(((@product.price) * (@product.umren.to_f / @product.umrez)).round(2), :precision => 2) %></p><br/>
+                    <%= f.label "Price per box" %><br>
+                    <%= @product.price %>
+                  </div>
+              <% else %>
+                  <div class="form-group">
+                    <label>
+                      Quantity
+                      <% if @product.suom != '' %>
+                        in <%= @product.suom %>
+                      <% end %>
+                    </label>
+                    <%= text_field_tag :quantity,1,:required => true %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label "Price per item." %><br>
+                    <%= number_with_precision(@product.price, :precision => 2) %>
+                  </div>
+
+              <% end %>
+              
+          <% end %>
+
+
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :description, :readonly=>true %><br>
+            <%= @product.description %>
+          </div>
+          <div class="form-group">
+            <%= f.label :subdescription, :readonly=>true %><br>
+            <%= @product.subdescription %>
+          </div>
+        </div>
+      </div>
+      <div class="row" >
+        <div  class="col-md-12" style="background-color: #e9e9e9;">
+          <h4 style="font-weight:bold;">Select section to add products to: </h4>
+          <div class="form-group">
+            <ul>
+              <% count = 0%>
+              <% @projectid = params[:project_id].to_i %>
+              <% Section.all.each do |section| %>
+                  <%  if section.project_id == @projectid %>
+                      <li id="nosub" class="hide"><%= section.name %></li>
+                      <ul>
+                        <% for subsection in section.subsections %>
+                            <%  if section.project_id == @projectid %>
+                                <script>$('#checkallbox').hide();$('#nosub').hide();</script>
+                                <% count = count +1 %>
+                                <% if count > 1 %>
+                                    <li><%= check_box_tag "product[subsection_ids][]", subsection.id, @product.subsection_ids.include?(subsection.id), id: dom_id(subsection), class:"selectbox validate[required]" %>
+                                      <script>$('#checkallbox').show();$('#nosub').show();</script>
+                                <% else %>
+                                    <li><%= check_box_tag "product[subsection_ids][]", subsection.id, @product.subsection_ids.include?(subsection.id), id: dom_id(subsection), checked:true, class:"selectbox validate[required]" %>
+                                <% end %>
+
+                                <%= label_tag dom_id(subsection), subsection.name %><br></li>
+                            <% else %>
+                            <% end %>
+                        <% end %>
+                  <% end %>
+                  </ul>
+              <% end %>
+            </ul>
+          </div>
+          <div id="checkallbox">
+            <input type="checkbox" id="checkAll"/>
+            <label for="checkAll">Check all sections</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div  class="col-md-12">
+          <div class="checkbox" style="margin-left:20px;">
+            <table>
+              <%  alllineitems  = Install.where(product_id: @product.id.to_i).all %>
+              <% alllineitems.each do |install| %>
+                  <%   getProductdDtails = Product.where(sku:install.sku).first %>
+                  <tr>
+                    <td>
+                      <%= check_box_tag "install_ids[]", install.id, :checked => true %>
+                    </td>
+                    <td width="20%">
+                      <% if getProductdDtails.present? %>
+                      <%= image_tag(getProductdDtails.image, :width => 50) if getProductdDtails.image.present? %>
+                      <% end %>
+                    </td>
+                    <td width="40%">  <%= install.title %></td>
+                    <td width="20%">  <%= install.sku %></td>
+                    <td width="20%"> <%= number_to_currency(install.price, unit: "R") %> </td>
+                  </tr>
+              <% end %>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" onclick="clearmodal();" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%= f.submit  "Add Product" , :class => "btn btn-primary"%>
+      </div>
+      <div id="results"></div>
+      </div>
+<script>
+
+         $("label:contains('Subsection')").html("Add product to quote without sections");
+
+         $(document).ready(function() {
+             $('#checkAll').click(function(event) {  //on click
+                 if(this.checked) { // check select status
+                     $('.selectbox').each(function() { //loop through each checkbox
+                         this.checked = true;  //select all checkboxes with class "checkbox1"
+                     });
+                 }else{
+                     $('.selectbox').each(function() { //loop through each checkbox
+                         this.checked = false; //deselect all checkboxes with class "checkbox1"
+                     });
+                 }
+             });
+            
+         });
+
+         var getQ = $("#quantityfill").val();
+
+         $("#metersq").html(getQ);
+         var getQs =  '<%= @product.umren.to_f / @product.umrez %>';
+         var calc = getQs * getQ;
+         $("#boxsq").html(Math.ceil(calc));
+         var getP = '<%= ((@product.price) * (@product.umren.to_f / @product.umrez)) %>'
+         $("#priceme").val(<%= @product.price %>);
+         $("#quantity").val(1);
+
+         $( "#quantityfill" ).change(function() {
+             var getQ = $("#quantityfill").val();
+             $("#metersq").html(getQ);
+             var getQs =  '<%= @product.umren.to_f / @product.umrez %>';
+             var calc = getQs * getQ;
+             $("#boxsq").html(Math.ceil(calc));
+             var boxquantity = Math.ceil(calc);
+			  $("#quantity").val(boxquantity);
+             var getP = <%= @product.price %>
+			
+             //var totalPrice = (getP * boxquantity);
+             //var decFormat = roundCurrency(totalPrice);
+             var totalPrice = getP
+             var decFormat = roundCurrency(totalPrice);
+            $("#priceme").val(decFormat);
+				
+           
+         });
+
+         function roundCurrency(price){
+             return decimalStringFormat = price.toFixed(2);
+         }
+         function clearmodal() {
+             $('#testnow').data('bs.modal', null);
+             $('#new_modal').data('bs.modal', null);
+
+         }
+         $(".edit_product").bind("ajax:beforeSend", function() {
+             $("#results").html("Processing request.");
+             $(".actions").hide();
+
+         });
+         $(".edit_product").bind("ajax:success", function() {
+             $("#results").html("Product added successfully");
+             clearmodal();
+             $('#load').load(document.URL +  ' #load');
+
+
+             $('#testnow').data('bs.modal', null);
+               $('#new_modal').data('bs.modal', null);
+             $('#testnow').modal('hide');
+             $("#results").hide();
+             $(".actions").show();
+
+         });
+         $(".edit_product").bind("ajax:error", function() {
+             $("#results").html("Error has occurred. Please try again");
+             $(".actions").show();
+         });
+
+
+</script>
+
+     
+  <% end %>

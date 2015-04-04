@@ -1,0 +1,156 @@
+source 'http://rubygems.org'
+
+gem 'rails_12factor'
+
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '4.2.1'
+
+gem 'axlsx_rails'
+#gem 'dynamics_crm'
+# Use sqlite3 as the database for Active Record
+gem 'sqlite3', group: :development
+
+# Mysql
+gem "omniauth-magento"
+gem "multi_json"
+gem "oauth"
+gem 'mysql2' , group: :production
+
+#font awesome
+gem 'font-awesome-sass'
+
+# Use SCSS for stylesheets
+gem 'sass-rails'
+#gem 'ruby-debug-ide'
+#drag ad drop
+gem 'jquery-form-validator-rails', '~> 0.0.1'
+gem 'touchpunch-rails'
+gem "font-awesome-rails"
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier'
+
+# Use CoffeeScript for .js.coffee assets and views
+
+gem 'growlyflash'
+
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+#gem 'therubyracer', platforms: :ruby
+
+#gem 'prawn', '~> 1.3.0'
+#gem 'prawn-table', '~> 0.2.0'
+
+# Use jquery as the JavaScript library
+#gem 'jquery-rails'
+#gem 'jquery-rails'
+
+gem 'jquery-ui-rails'
+
+#dynamic form elements
+
+#gem "dynamic_form"
+
+#in place edit for trainign mode
+
+gem 'best_in_place', '~> 3.0.1'
+gem 'bootstrap-editable-rails'
+
+#json gem
+
+#
+gem 'json'
+
+
+#gem 'tire'
+
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+#gem 'turbolinks'
+gem 'jquery-turbolinks'
+
+#cloning and keeping relations
+gem 'deep_cloneable', '~> 2.0.0'
+
+#pdf creator
+#gem "prawnto_2", :require => "prawnto"
+
+#multi step form
+
+#gem 'wicked'
+
+# elastic search
+#gem "spring", group: :development
+
+#gem 'elasticsearch'
+
+#Angular
+gem 'zookal_magento_rest_api'
+
+group :assets do
+#  gem 'angularjs-rails'
+end
+
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder'
+
+# user accounts
+
+gem 'devise', '~> 3.4.1'
+gem 'cancan'
+#model form Cacoon
+
+
+group :test, :development do
+ # gem "rspec"
+#  gem "rspec-rails"
+# gem "factory_girl_rails"
+#  gem "capybara"
+ # gem "database_cleaner"
+ # gem "selenium-webdriver"
+  gem "minitest-rails-capybara"
+  gem 'minitest-reporters'
+end
+group :doc do
+  # bundle exec rake doc:rails generates the API under doc/api.
+  gem 'sdoc', require: false
+end
+
+# Use ActiveModel has_secure_password
+# gem 'bcrypt-ruby', '~> 3.1.2'
+
+# Use unicorn as the app server
+# gem 'unicorn'
+
+# Use Capistrano for deployment
+# gem 'capistrano', group: :development
+gem 'daemons'
+#Use debugger
+gem 'rails-dev-boost', :git => 'git://github.com/thedarkone/rails-dev-boost.git'
+
+
+
+gem 'byebug'
+
+#gem "carrierwave"
+
+gem 'execjs'
+
+gem 'activeadmin', github: 'activeadmin'
+gem 'rb-fsevent', '>= 0.9.1'
+
+
+gem 'unicorn-rails'
+#gem 'rb-readline'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+gem 'jQuery-Validation-Engine-rails'
+
+gem 'savon'
+#gem 'ruby-lint'
+#gem 'rack-cors', '0.3.1'
+#gem 'rack-cors', :require => 'rack/cors'
+gem 'rest-client'
+
+gem 'whenever'
+
+gem 'capistrano3-unicorn'
+gem 'unicorn-worker-killer'

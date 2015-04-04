@@ -1,0 +1,2 @@
+<div class="search-items"><%= image_tag(product.image, :width => 50) if product.image.present? %>&nbsp;&nbsp;<%= product.title %>&nbsp;&nbsp;<%= product.sku%>&nbsp;&nbsp;<%= number_to_currency(product.price, unit: "R") %><br/>  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %></div>
+

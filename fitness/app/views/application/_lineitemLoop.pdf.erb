@@ -1,0 +1,54 @@
+    <% count = 1 %>
+    <table class="table table-striped noheader<%=count%>">
+        <thead>
+            <th>Image</th>
+            <th>Title</th>
+            <th>SKU</th>
+            <th>Qty</th>
+            <th>SUOM</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th></th>
+        </thead>
+        <tbody>
+        <% for lineitem in subsection.lineitems  %>
+            <% @product = Product.where(sku: lineitem.sku).first %>
+            <script>$("noheader<%=count%>").show();</script>
+            <% count = count +1 %>
+            <tr>
+              <% if lineitem.price.present? == true%>
+                  <% @totals ||= [] %>
+
+                  <% @totals.push(lineitem.price * lineitem.quantity.to_i) %>
+                  <% @total = number_to_currency(@totals.inject{|sum,x| sum + x }, unit: "R") %>
+              <% end %>
+              <% if  lineitem.exvat_price.present? == true%>
+                  <% @exvattotals ||= [] %>
+                  <% @exvattotals.push((lineitem.price * 100 /114) * ( lineitem.quantity.to_i)) %>
+                  <% @subtotal = number_to_currency(@exvattotals.inject{|sum,x| sum + x }, unit: "R") %>
+              <% end %>
+                <td><%= image_tag(lineitem.image, :width => 70) if lineitem.image.present? %></td>
+                <td><%= lineitem.title %></td>
+                <td><%= lineitem.sku %></td>
+                <td><%= lineitem.quantity %></td>
+              <td><%= lineitem.suom %></td>
+              <% if @project.exvat == true %>
+                  <td><span class="price"><%= number_to_currency(lineitem.exvat_price, unit: "R") %> ex.vat.</span></td>
+
+              <%else %>
+                  <td><span class="price"><%= number_to_currency(lineitem.price, unit: "R") %></span></td>
+              <% end %>
+
+              <% if @project.exvat == true %>
+                  <td><span class="price"><%= number_to_currency(lineitem.exvat_price.to_i * lineitem.quantity.to_i, unit: "R") %> ex.vat.</span></td>
+
+              <%else %>
+                  <td><span class="price"><%= number_to_currency(lineitem.price * lineitem.quantity.to_i, unit: "R") %></span></td>
+              <% end %>
+            </tr>
+
+          <% end %>
+        </tbody>
+    </table>
+
+

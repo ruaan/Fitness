@@ -1,0 +1,203 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="clearmodal();" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Add Product to Quote.</h4>
+</div>
+
+<div class="modal-body">
+  <%= form_for(@lineitem, remote: false) do |f| %>
+      <% if @lineitem.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@lineitem.errors.count, "error") %> prohibited this product from being saved:</h2>
+            <ul>
+              <% @lineitem.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+      <% end %>
+      <div class="row add-margin-bottom">
+        <div  class="col-md-8">
+          <div class="form-group">
+            <%= image_tag(@lineitem.image, :width => 250) if @lineitem.image.present? %>
+          </div>
+        </div>
+        <div  class="col-md-4">
+          <div class="form-group">
+            <%= f.label :title, :readonly=>true %><br>
+            <%= f.text_field :title, :readonly=>true %>
+          </div>
+          <% if can? :update , @lineitem %>
+              <div class="form-group">
+                <%= f.label :sku %><br>
+                <%= f.text_field :sku %>
+              </div>
+          <%else %>
+              <div class="form-group">
+                <%= f.label :sku, :readonly=>true %><br>
+                <%= f.text_field :sku, :readonly=>true %>
+              </div>
+          <% end %>
+          <% if can? :update , @lineitem %>
+              <% if @lineitem.catagory == '50' || @lineitem.catagory == '63' || @lineitem.catagory == '64' || @lineitem.catagory == '65' || @lineitem.catagory == '66' || @lineitem.catagory == '119' %>
+                  <div class="form-group">
+                    <label >Quantity in m/2:</label>
+                    <%= text_field_tag :quantityfill,1,:required => true %>
+                    <%= hidden_field_tag :quantity  %>
+                  </div>
+                  <div class="form-group">
+                    <label>Price per m/2.(incl. VAT)</label>
+                    <p id="pricem2">R<%= number_with_precision(((@lineitem.price) * (@lineitem.umren.to_f / @lineitem.umrez)).round(2), :precision => 2) %></p><br/>
+                    <p><span id="metersq"></span> m/2 will = <span id="boxsq"></span> boxes at </p>
+                    <label>Price per box.(incl. VAT)</label>
+                    <%= text_field_tag :priceme,:step => 0.01,:required => true  %>
+                  </div>
+              <%  else%>
+                  <div class="form-group">
+                    <label >Quantity</label>
+                    <%= number_field_tag :quantity, 1, :required => true, :value => @lineitem.quantity.to_i  %>
+                  </div>
+                  <div class="form-group">
+                    <label>Price per item.(incl. VAT)</label>
+                    R <%= text_field_tag :priceme, :step => 0.01,:required => true  %>
+                  </div>
+              <%end%>
+          <% else %>
+              <% if @lineitem.catagory == '50' || @lineitem.catagory == '63' || @lineitem.catagory == '64' || @lineitem.catagory == '65' || @lineitem.catagory == '66' || @lineitem.catagory == '119' %>
+                  <div class="form-group">
+                    <label >Quantity in m/2:</label>
+                    <%= text_field_tag :quantityfill,1,:required => true %>
+                    <%= hidden_field_tag :quantity  %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label "Price per m/2.(incl. VAT)" %><br>
+                    <p id="pricem2"><%= number_with_precision(((@lineitem.price) * (@lineitem.umren.to_f / @lineitem.umrez)).round(2), :precision => 2)  %></p><br/>
+                    <label>Price per box .(incl. VAT)</label>
+                    <%= number_with_precision(@lineitem.price, :precision => 2) %>
+                  </div>
+              <%  else%>
+                  <div class="form-group">
+                    <label >Quantity:</label>
+                    <%= text_field_tag :@quantity,1,:required => true %>
+                  </div>
+                  <div class="form-group">
+                    <label>Price per item.(incl. VAT)</label>
+                    R <%= number_with_precision(@lineitem.price, :precision => 2) %>
+                  </div>
+              <%end%>
+
+          <% end %>
+          <script>
+              var getQ = $("#quantityfill").val();
+
+              $("#metersq").html(getQ);
+
+              var getQs = 0;
+
+              <% if @lineitem.umren.present? && @lineitem.umrez.present? %>
+              getQs = '<%= @lineitem.umren.to_f / @lineitem.umrez %>'
+
+              <%end%>
+
+              var getQs =  '<%= @lineitem.umren.to_f / @lineitem.umrez %>';
+              var calc = getQs * getQ;
+              $("#boxsq").html(Math.ceil(calc));
+              var getP = '<%= ((@lineitem.price) * (@lineitem.umren.to_f / @lineitem.umrez)) %>'
+              $("#priceme").val(<%= number_with_precision(@lineitem.price, :precision => 2) %>);
+              $("#quantityfill").val('<%= @lineitem.quantity %>');
+
+              $("#metersq").html(getQ);
+              var getQs =  '<%= @lineitem.umren.to_f / @lineitem.umrez %>';
+              var calc = getQs * getQ;
+              $("#boxsq").html(Math.ceil(calc));
+              var boxquantity = Math.ceil(calc);
+              console.log(boxquantity);
+              $("#quantity").val('<%= @lineitem.quantity %>');s
+              if (boxquantity != "NaN") {
+                  $("#quantity").val(boxquantity);
+                  console.log(boxquantity);
+              }
+              var getP = '<%= @lineitem.price %>';
+
+              $( "#quantityfill" ).change(function() {
+                  var getQ = $("#quantityfill").val();
+                  $("#metersq").html(getQ);
+                  var getQs =  '<%= @lineitem.umren.to_f / @lineitem.umrez %>';
+                  var calc = getQs * getQ;
+                  $("#boxsq").html(Math.ceil(calc));
+                  var boxquantity = Math.ceil(calc);
+                  $("#quantity").val(boxquantity);
+                  var getP = '<%= @lineitem.price %>'
+
+                  //var totalPrice = (getP * boxquantity);
+                  //var decFormat = roundCurrency(totalPrice);
+                  var totalPrice ="<%= @lineitem.price %>";
+                  var decFormat = roundCurrency(totalPrice);
+                  $("#priceme").val(decFormat);
+
+
+              });
+
+              function roundCurrency(price){
+                  return decimalStringFormat = price.toFixed(2)
+              }
+
+          </script>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= f.label :description, :readonly=>true %><br>
+            <%= @lineitem.description %>
+          </div>
+          <div class="form-group">
+            <%= f.label :subdescription, :readonly=>true %><br>
+            <%= @lineitem.subdescription %>
+          </div>
+        </div>
+      </div>
+      <div class="row" >
+        <div  class="col-md-12" style="background-color: #e9e9e9;">
+          <h4 style="font-weight:bold;">Move Product to Sub-Section: </h4>
+          <div class="form-group">
+
+
+            <% projectid = params[:project_id]%>
+
+
+            <% section = Section.where(project_id: projectid).ids %>
+
+            <%= puts mytest = Subsection.where(section_id: section )	  %>
+
+            <%= f.select('subsection_id', mytest.all.collect {|r| [h(r.name), r.id] } ) %>
+
+
+          </div>
+          <br/>
+          <br/>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" onclick="clearmodal();" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%= f.submit  "Save" , :class => "btn btn-primary"%>
+      </div>
+      </div>
+
+      <script>
+          $("label:contains('Subsection')").html("Add product to quote without sections");
+
+
+          $(document).ready(function() {
+              $('#checkAll').click(function (event) {  //on click
+                  if (this.checked) { // check select status
+                      $('.selectbox').each(function () { //loop through each checkbox
+                          this.checked = true;  //select all checkboxes with class "checkbox1"
+                      });
+                  } else {
+                      $('.selectbox').each(function () { //loop through each checkbox
+                          this.checked = false; //deselect all checkboxes with class "checkbox1"
+                      });
+                  }
+              });
+
+          });
+      </script>
+  <% end %>

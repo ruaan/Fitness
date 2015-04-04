@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="clearmodal();" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Copy Section</h4>
+</div>
+<div class="modal-body">
+<%= form_for(@copysub) do |f| %>
+  <% if @copysub.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@copysub.errors.count, "error") %> prohibited this copysub from being saved:</h2>
+
+      <ul>
+      <% @copysub.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+ <div class="field">
+     <%= f.label :section_id %><br>
+     <%= f.collection_select(:section_id, Section.where(project_id: params[:project_id]), :id, :name) %>
+   </div>
+ 
+  
+  <div class="field">
+    <%= f.label :subsection_id %><br>
+    <%= f.hidden_field :subsection_id, :value => params[:meid] %>
+  </div>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name, required:true %>
+  </div>
+
+          <div class="actions">
+        <button type="button" onclick="clearmodal();" class="btn btn-default" data-dismiss="modal">Close</button>
+
+        <%= f.submit  "Copy Subsection" , :class => "btn btn-primary"%>
+      </div>
+        </div>
+<% end %>
+

@@ -1,0 +1,24 @@
+<div id="login">
+    <div class="well">
+        <h2>Change your password</h2>
+        <p id="heading" >Please complete the form below.</p>
+        <p class="required-field-caption">&ast; Required Fields</p>
+        <hr noshade>
+
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
+  <%= f.hidden_field :reset_password_token %>
+
+  <div><%= f.label :password, "New password" %><br />
+    <%= f.password_field :password, autofocus: true, autocomplete: "off" %><span>&nbsp;&ast;</span></div>
+
+  <div><%= f.label :password_confirmation, "Confirm new password" %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off" %><span>&nbsp;&ast;</span></div>
+
+        <br>
+  <div><%= f.submit "Send",:class => "btn btn-primary" %></div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+    </div>
+</div>

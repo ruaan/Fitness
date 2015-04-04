@@ -1,0 +1,16 @@
+# Read about fixtures at
+# http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  type: 
+   : MyString
+  job: MyText
+  interval: 1
+  last_run_at: 2015-03-18 13:12:54
+
+two:
+  type: 
+   : MyString
+  job: MyText
+  interval: 1
+  last_run_at: 2015-03-18 13:12:54

@@ -1,0 +1,79 @@
+
+<%= render "welcome/menuRight" %>
+<div style="max-width:90%;margin:auto;">
+  <div class="page-header">
+    <h1>Customers  <a href="/data/one"  style="float:right;" class="btn btn-md btn-info white">
+      <i class="fa fa-arrow-left"></i> Return to Quote page</a></h1>
+
+
+  </div>
+
+  <% if @project.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+        <ul>
+          <% @project.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+  <% end %>
+  <% growlyflash_static_notices %>
+
+
+
+
+
+  <table id="datatable" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+      <th>Customer Name</th>
+      <th>Project Name</th>
+      <th>SAP Quote Number</th>
+      <th>Contact Number</th>
+      <th>Version</th>
+    </tr>
+    </thead>
+
+    <tfoot>
+    <tr>
+      <th>Customer Name</th>
+      <th>Project Name</th>
+      <th>SAP Quote Number</th>
+      <th>Contact Number</th>
+      <th>Version</th>
+    </tr>
+    </tfoot>
+    <tbody>
+    <%  @accounts.each do |account|   %>
+
+             <% for project in account.projects %>
+            <tr>
+              <td class="title"><%= link_to account.name, project_path(project) %><span class="plusright"></td>
+
+              <td><%= link_to project.projectName, project_path(project) %></td>
+              <td><%=  project.sapCode %></td>
+              <td><%=  account.phone %></td>
+              <td><%= link_to project.version, project_path(project) %></td>
+            </tr>
+        <% end %>
+
+    <% end %>
+
+       
+
+        </tbody>
+        </table>
+
+</div>
+<script>
+
+    $(document).ready(function(e){
+
+        $('#datatable').DataTable();
+
+
+    });
+
+
+</script>

@@ -1,0 +1,88 @@
+
+    <table class="table table-striped noheader">
+        <thead>
+            <th>Image</th>
+            <th>Title</th>
+            <th>SKU</th>
+            <th>Qty</th>
+            <th>SUOM</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th></th>
+        </thead>
+        <tbody>
+        <% @a = Array.new %>
+
+        <% projectid = Section.where(:project_id => @project.id).all %>
+         <% subsectionids = Subsection.where(:section_id => projectid).ids %>
+        <% lineitem2 = Lineitem.where(:subsection_id => subsectionids).all %>
+         <% lineitem = Lineitem.where(:subsection_id => subsectionids).first %>
+          <% countsub = 0 %>
+            <% lineitem2.each do |f| %>
+            <% if @a.include?(lineitem2[countsub].title) == false %>
+            <tr>
+
+              <% @found = Lineitem.where(title: lineitem2[countsub].title,:subsection_id =>subsectionids ).all %>
+
+             <% times = @found.length%>
+             <% (1..times).each do |d|%>
+
+                 <% @array = Array.new %>
+                  <% @getItemsinfo = Lineitem.where(id: @found[d-1].id).first %>
+
+                  <% (1..@found.length).each do |g|%>
+
+                      <% @getItemsinfo = Lineitem.where(id: @found[g -1].id).first %>
+                      <% @array.push(@getItemsinfo.quantity) %>
+                      <% @a.push(@getItemsinfo.title) %>
+
+                      <% end %>
+
+                  <% @finalquantity =@array.inject{|sum,x| sum + x } %>
+
+
+                  <% @showprice = @getItemsinfo.price.to_i * @finalquantity.to_i %>
+
+
+                <%end%>
+              <% if lineitem2[countsub].price.present? == true%>
+            <% @totals ||= [] %>
+
+            <% @totals.push(lineitem2[countsub].price * @finalquantity) %>
+            <% @total = number_to_currency(@totals.inject{|sum,x| sum + x }, unit: "R") %>
+        <% end %>
+        <% if  lineitem2[countsub].exvat_price.present? == true%>
+            <% @exvattotals ||= [] %>
+
+                  <% @exvattotals.push((lineitem2[countsub].price * 100 /114) * ( @finalquantity)) %>
+            <% @subtotal = number_to_currency(@exvattotals.inject{|sum,x| sum + x }, unit: "R") %>
+        <% end %>
+                <td><%= image_tag(lineitem2[countsub].image, :width => 70) if lineitem2[countsub].image.present? %></td>
+                <td><%= lineitem2[countsub].title %></td>
+                <td><%= lineitem2[countsub].sku %></td>
+                <td><%= @finalquantity %></td>
+              <td>
+                <%= lineitem2[countsub].suom %>
+              </td>
+              <td><%= number_to_currency(@getItemsinfo.price, unit: "R") %></td>
+
+                <% if @project.exvat == true %>
+                  <% exvat_showprice = @showprice * 0.14 %>
+                  <td><span class="price"><%= number_to_currency(@showprice - exvat_showprice, unit: "R") %> ex.vat.</span></td>
+
+            <%else %>
+                <td><span class="price"><%= number_to_currency(@showprice, unit: "R") %></span></td>
+                <% end %>
+
+            </tr>
+                 <% else%>
+                 <% end%>
+            <% countsub = countsub + 1 %>
+        <% end %>
+
+
+
+        </tbody>
+    </table>
+
+

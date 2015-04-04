@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="destroyModal();" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Add Product</h4>
+</div>
+<div class="modal-body">
+<%= form_for(@product) do |f| %>
+  <% if @product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+      <ul>
+      <% @product.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :image %><br>
+    <%= f.file_field :image %>
+  </div>
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title, required:true %>
+  </div>
+  <div class="field">
+    <%= f.label :sku %><br>
+    <%= f.text_field :sku, required:true %>
+  </div>
+  <div class="field">
+    <%= f.label "quantity" %><br>
+    <%= text_field_tag :quantity %>
+  </div>
+  <div class="field">
+    <%= f.label :price %><br>
+    <%= f.number_field :price, :step => 'any',:required => true %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :subdescription %><br>
+    <%= f.text_field :subdescription %>
+  </div>
+    <div class="field">
+      <h4 style="font-weight:bold;">Select section to add products to: </h4>
+      <div class="field">
+        <% @sections = Section.where(project_id:params[:project_id]).all %>
+        <% @sections.each do |section|   %>
+            <% for subsection in section.subsections %>
+                <%  if section.project_id == params[:project_id]  %>
+                    <%= check_box_tag "product[subsection_ids][]", subsection.id, @product.subsection_ids.include?(subsection.id), id: dom_id(subsection) %>
+                    <%= label_tag dom_id(subsection), subsection.name %><br>
+                <%  else %>
+                <% end %>
+            <% end %>
+        <% end %>
+
+      </div>
+      <input type="checkbox" id="checkAll"/>
+      <label for="select_all">Check all sections</label>
+
+            <div class="actions">
+          <button type="button" onclick="destroyModal();" class="btn btn-default" data-dismiss="modal">Close</button>
+
+          <%= f.submit  "Add Product" , :class => "btn btn-primary"%>
+      </div>
+    </div>
+
+<% end %>
+</div>

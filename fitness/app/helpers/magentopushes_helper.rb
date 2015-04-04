@@ -1,0 +1,2 @@
+module MagentopushesHelper
+end

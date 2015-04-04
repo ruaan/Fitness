@@ -1,0 +1,112 @@
+<%= render "application/menuLeft" %>
+<%= render "application/menuRight" %>
+<%= render "application/bottomInfo" %>
+<div id="middlepage">
+  <section>
+
+    <button class="toggle-menu menu-bottom">Toggle Bottom Menu</button>
+</section>
+
+ <!-- Modal -->
+  <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        </div>
+        <div  class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+<div class="row">
+
+<div id="left" class="col-md-12">
+
+
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading darkblue">
+        <h2 class="panel-title">Sections</h2>
+      </div>
+      <div class="panel-body">
+
+        <%= render "application/sectionButtons" %>
+
+
+        <%  @sections.each do |section|   %>
+            <% if section.id == 1 %>
+
+            <% else %>
+                <div class="page-header" >
+                  <h4 style="background-color: #E6E6E6;clear:both;padding:15px 10px;margin-top: 20px;">Section: <%= section.name %>
+                    <span style="font-size: 20px;float:right;"><%= link_to 'E', edit_section_path(section) %></span>
+                    <span style="font-size: 20px;float:right;"><%= link_to 'D', section, method: :delete, data: { confirm: 'Are you sure?' } %></span>
+                  </h4>
+                </div>
+                <% for subsection in section.subsections %>
+                    <% if subsection.id == 1 %>
+                    <% else %>
+                        <div class="page-header">
+                          <h4 style="background-color: #F1F1F1;clear:both;padding:15px 10px;"> Sub Section: <%= subsection.name %>
+
+                            <span style="font-size: 20px;float:right;"><%= link_to 'D', subsection, method: :delete, data: { confirm: 'Are you sure?' } %></span>
+                          </h4>
+                        </div>
+                        <table>
+                          <thead>
+                          <th width="100"></th>
+                          <th>Title</th>
+                          <th >SKU</th>
+                          <th >Description</th>
+
+                          <th >Price</th>
+
+                          </thead>
+
+                          <tbody>
+                          <hr/>
+                          <% for product in subsection.products  %>
+                              <tr>
+                                <td width="20%"><%= image_tag(product.image, :width => 70) if product.image.present? %></td>
+                                <td width="20%"><%= product.title %></td>
+                                <td width="15%"><%= product.sku %></td>
+                                <td width="25%"><%= product.description %></td>
+
+                                <td width="20%"><%= product.price %></td>
+                                <td width="20%"><span style="font-size: 20px;float:right;"><%= link_to 'D', product, method: :delete, data: { confirm: 'Are you sure?' } %></span></td>
+
+                              </tr>
+                          <% end %>
+
+                          </tbody>
+                        </table>
+
+
+
+
+                    <% end %>
+                <% end %>
+            <% end %>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+    </div>
+

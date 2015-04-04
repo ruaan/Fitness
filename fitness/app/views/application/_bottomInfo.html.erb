@@ -1,0 +1,43 @@
+<% @users.each do |user| %>
+<% if user.training_mode == 0 && user.sign_in_count <= 10 %>
+<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom">
+
+
+    <div id="row">
+         <div class="col-md-12">
+            <h2><%= session[:line1] %></h2>
+            <p><%= session[:line2] %></p>
+            <p><%= session[:line3] %></p>
+
+        </div>
+    </div>
+  </div>
+
+<script>
+    $('.product').removeClass("flash");
+    $('.project').removeClass("flash");
+    $('.account').removeClass("flash");
+	$('.jPushMenuBtn').show();
+    $("<%= session[:blink] %>").addClass("flash");
+</script>
+
+  <% if session[:step] == "step4" %>
+  <div id="step4" style="display:none">
+    <p><%= session[:step] %></p>
+  <div id="row">
+    <div class="col-md-12">
+      <p>Print Quote by pushing  <i class="fa fa-archive fa-2x"></i> button on the right </p>
+
+    </div>
+  </div>
+  </div>
+      <% end %>
+</nav>
+<% else %>
+
+</div>
+<script>
+	$('.jPushMenuBtn').hide();  
+</script>
+<% end %>
+<% end %>

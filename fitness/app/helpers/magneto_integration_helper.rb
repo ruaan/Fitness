@@ -1,0 +1,2 @@
+module MagnetoIntegrationHelper
+end

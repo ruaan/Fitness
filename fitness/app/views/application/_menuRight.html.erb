@@ -1,0 +1,247 @@
+<div class="cbp-spmenu cbp-spmenu-vertical right-tabs cbp-spmenu-right">
+  <div  class="row">
+    <div class="col-sm-2 mainleft" >
+<div class="menu-close hidden" href="#close" ><i class="fa fa-times fa-2x"></i></div>
+      <ul class="topspace">
+        <li class="icons"></li>
+        <li class="icons">
+          <%= link_to "/projects/#{@project.id}.pdf", :class=>"print",:style => "color:#fff" do %>
+              <i class="fa fa-print fa-2x"></i><div class="side-menu-right-item-caption">Print</div>
+          <% end %>
+        </li>
+
+        <li  class="icons">
+          <a style="color:#fff" class="toggle-menu menu-right email" onclick="moveExport()" ><i class="fa fa-archive fa-2x"></i><div class="side-menu-right-item-caption">Export</div></a>
+
+        </li>
+
+
+        <li class="icons">
+          <a style="color:#fff" class="toggle-menu menu-right sap" onclick="moveSap()"><i class="fa fa-folder-open fa-2x"></i><div class="side-menu-right-item-caption">SAP</div></a>
+        </li>
+        <li class="icons">
+          <a style="color:#fff" class="toggle-menu menu-right web" onclick="moveWeb()"><i class="fa fa-globe fa-2x"></i><div class="side-menu-right-item-caption">Website</div></a>
+        </li>
+
+
+      </ul>
+    </div>
+        <div class="col-sm-10 ">
+
+          <div id="email">
+            <div class="efirst">
+              <h3 style="margin-left: -20px;">Document Export</h3>
+              <br/>
+              <br/>
+              <div class="first">Select document type to export as PDF:</div>
+              <br/>
+              <br/>
+              <form>
+
+                <select id="theselect">
+                  <option value="">Please select</option>
+                  <option value="<%= @projects.id %>/techspec.pdf">Technical Spec</option>
+                  <option value="<%= @projects.id %>/techspecnoprice.pdf">Technical without Pricing</option>
+                  <option value="<%= @projects.id %>/noprice.pdf">Spec without Pricing</option>
+                  <% if can? :update , @projects %>
+                    <option value="<%= @projects.id %>/toexcel.xls">Excel Spec</option>
+                      <% end %>
+                  <option value="<%= @projects.id %>/consolidated.pdf">Consolidated Spec</option>
+                  <option value="<%= @projects.id %>/consolidatednoprice.pdf">Consolidated Spec No Price</option>
+                </select>
+                <br/>
+                <br/>
+                <button id="buttons" class="btn btn-sap" type="button">Export</button>
+              </form>
+              <script>
+                  $('#buttons').click(function() {
+                      var url = $('#theselect').val();
+                      window.open(url);
+                  });
+              </script>
+           </div>
+           </div>
+          <div id="sap">
+            <h3 style="margin-left: -20px;">SAP Quote</h3>
+            <br/><br/>
+            <ul class="nav nav-tabs" role="tablist" id="sapTab" style="height:50px;">
+              <li class="active"><a href="#sappush" role="tab" data-toggle="tab">Push Quote to SAP</a></li>
+              <li ><a href="#sappull" role="tab" data-toggle="tab" class="active">Get Quote from SAP</a></li>
+
+            </ul>
+            <div class="tab-content">
+
+              <div class="tab-pane active" id="sappush" style="width:90%">
+
+                <%= form_for(@sappush) do |f| %>
+                    <% if @sappush.errors.any? %>
+                        <div id="error_explanation">
+                          <h2><%= pluralize(@sappush.errors.count, "error") %> prohibited this sap from being saved:</h2>
+
+                          <ul>
+                            <% @sappush.errors.full_messages.each do |message| %>
+                                <li><%= message %></li>
+                            <% end %>
+                          </ul>
+                        </div>
+                    <% end %>
+
+                    <%= hidden_field_tag :projectid, @projects.id%>
+                    <div class="form-group">
+                      <label for="getpass">Username:</label>
+                      <%= text_field_tag :username, 'I905CASHIER1',:class=>"form-control"  %>
+                    </div>
+                    <div class="form-group">
+                      <label for="getpass">Password:</label>
+                      <%= text_field_tag :password,'TIVOLI',:class=>"form-control"  %>
+                    </div>
+                    <div class="form-group">
+                      <label for="getpass">Rep Code:</label>
+                      <%= text_field_tag :repCode,'5012',:class=>"form-control"   %>
+                    </div>
+                    <div class="form-group">
+                      <label for="getpass">Store Code:</label>
+                      <%= text_field_tag :storeCode,'I905',:class=>"form-control"   %>
+                    </div>
+                    <% @accountme = Account.where(id:@project.account_id).first %>
+                    <% if @accountme.nil? %>
+                        <p>Please complete customer details before you can save quote to SAP.</p>
+
+              <%	    else %>
+                    <% if @accountme.name.present? || @accountme.email.present? && @accountme.email.present? %>
+                    <div class="actions">
+                      <%= f.submit "Save Quote", :class=>"btn btn-sap push" %>
+                    </div>
+                        <%	 else %>
+                            <p>Please complete customer details before you can save quote to SAP.</p>
+                        <% end %>
+                    <% end %>
+                <% end %>
+                <div id="pushResults" ></div>
+              </div>
+              <div class="tab-pane" id="sappull" style="width:90%">
+
+                <%= form_for(@sap, :remote => true) do |f| %>
+                    <% if @sap.errors.any? %>
+                        <div id="error_explanation">
+                          <h2><%= pluralize(@sap.errors.count, "error") %> prohibited this sap from being saved:</h2>
+
+                          <ul>
+                            <% @sap.errors.full_messages.each do |message| %>
+                                <li><%= message %></li>
+                            <% end %>
+                          </ul>
+                        </div>
+                    <% end %>
+
+
+                    <div class="form-group">
+                      <label for="getpass">Username:</label>
+                      <%= text_field_tag :username, 'I905CASHIER1',:class=>"form-control"  %>
+                    </div>
+                    <div class="form-group">
+                      <label for="getpass">Password:</label>
+                      <%= text_field_tag :password,'TIVOLI',:class=>"form-control"  %>
+                    </div>
+                    <div class="form-group">
+                      <label for="getpass">Rep Code:</label>
+                      <%= text_field_tag :repCode,'5012',:class=>"form-control"   %>
+                    </div>
+                    <div class="form-group">
+                      <label for="getpass">Store Code:</label>
+                      <%= text_field_tag :storeCode,'I905',:class=>"form-control"   %>
+                    </div>
+                    <div class="form-group">
+                      <label for="getpass">Quote Number:</label>
+                      <%= text_field_tag :quoteNumber,1024359017,:class=>"form-control"   %>
+                    </div>
+                    <div class="actions">
+                      <%= f.submit "Get Quote", :class=>"btn btn-sap" %>
+                    </div>
+                <% end %>
+                <div id="result" > </div>
+              </div>
+            </div>
+
+         </div>
+
+
+  <div id="web">
+    <h3 style="margin-left: -20px;">Website Quote</h3>
+    <br/><br/>
+
+
+          <%= form_for(@magento, :remote=>true) do |f| %>
+              <% if @magento.errors.any? %>
+                  <div id="error_explanation">
+                    <h2><%= pluralize(@magento.errors.count, "error") %> prohibited this magento from being saved:</h2>
+
+                    <ul>
+                      <% @magento.errors.full_messages.each do |message| %>
+                          <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+              <% end %>
+        <div class="form-group">
+          <%= f.label :refNumber %><br>
+          <%= text_field_tag :refNumber,'ITAA63000B2A8',:class=>"form-control" %>
+        </div>
+        <div class="actions">
+          <%= f.submit "Get Web Quote", :class=>"btn btn-sap" %>
+        </div>
+        <% end %>
+        <div id="magResult"></div>
+  
+</div>
+</div>
+
+
+
+</div>
+
+
+
+
+</div>
+</div>
+</div>
+<script>
+
+    function moveExport () { $('#sap').hide();$('#email').show();$('#web').hide();}
+    function moveSap () { $('#sap').show();$('#email').hide();$('#web').hide();$('#sapull').hide();
+    }
+    function moveWeb () { $('#web').show();$('#email').hide();$('#sap').hide();
+    }
+    $("#new_sap").bind("ajax:beforeSend", function() {
+        $("#result").html("Processing request.");
+
+    });
+    $("#new_sap").bind("ajax:success", function() {
+        $("#result").html("Quote was successful. Please wait for redirect to quote.");
+    });
+    $("#new_sap").bind("ajax:error", function() {
+        $("#result").html("Error has occurred. Please try again later.");
+    });
+    $("#new_sappush").bind("ajax:beforeSend", function() {
+        $("#pushResults").html("Processing request.");
+    });
+    $("#new_sappush").bind("ajax:success", function() {
+        $("#pushResults").html("Quote was successful. Please wait for redirect to quote.");
+    });
+
+    $(".push").click(function (){
+        $("#pushResults").html("Processing request.");
+    });
+    $("#new_magento").bind("ajax:beforeSend", function() {
+        $("#magResult").html("Processing request.");
+    });
+
+    $("#new_magento").bind("ajax:success", function() {
+        $("#magResult").html("Quote was successful. Please wait for redirect to quote.");
+    });
+    $("#new_magento").bind("ajax:error", function(data,error) {
+        $("#magResult").html("Incorrect reference number.");
+    });
+</script>
+

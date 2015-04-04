@@ -1,0 +1,31 @@
+ <div id="project">
+      <button data-toggle="modal" onclick="project()" data-target="#sectionsModal" type="button" class="btn btn-success btn-sm white">
+        <i class="fa fa-plus"></i>
+        Add project info to current blank project.
+      </button>
+
+      <% @pro.all.each do |project|   %>
+          <%    if project.projectName.present? %>
+          <h4><div><%= link_to project.projectName, project_path(project) %></div></h4>
+          <%  else %>
+
+          <% end %>
+      <% end %>
+
+              </div>
+    <div id="account">
+      <button data-toggle="modal" onclick="account()" data-target="#sectionsModal" type="button" class="btn btn-success btn-sm white">
+        <i class="fa fa-plus"></i>
+        Add a new Customer
+      </button>
+
+      <br/>
+      <h4>Customers Names:</h4>
+       <%  @accounts.each do |account|   %>
+
+          <h4 ><%= account.name %></h4>
+      <% end %>
+    </div>
+
+      </div>
+  </div>

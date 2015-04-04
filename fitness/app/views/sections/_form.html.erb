@@ -1,0 +1,77 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="clearmodal();" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Add Section to Quote.</h4>
+</div>
+<div class="modal-body">
+<%= form_for(@section, remote: true) do |f| %>
+
+  <% if @section.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@section.errors.count, "error") %> prohibited this section from being saved:</h2>
+
+      <ul>
+      <% @section.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+      <%= f.hidden_field :project_id, :value => @project.id.to_s %>
+
+
+
+  <div class="field">
+    <%= f.label "Section Name:" %> <br>
+    <%= f.text_field :name, required:true %><p>E.g. First Floor</p>
+  </div>
+  <div class="field">
+    <%= f.label "Description:" %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+
+    <%= f.hidden_field :misc %>
+  </div>
+      <div class="field">
+      <p>Do not create a automatic subsection </p>
+        <%= check_box_tag :auto %>
+        <div>
+      <div class="field">
+        <%= f.label 'Subsection Name:' %><br>
+        <%= text_field_tag :subsection_name %><p>E.g. Bathroom</p>
+      </div>
+      <div class="field">
+        <%= f.label 'Subsection Description:' %><br>
+        <%= text_field_tag :subsection_description %>
+      </div>
+          <div class="actions">
+            <button type="button" onclick="clearmodal();" class="btn btn-default" data-dismiss="modal">Close</button>
+            <%= f.submit "Add Section", :class => "btn btn-primary"%>
+      </div>
+  </div>
+<% end %>
+  <script>
+      $(".new_section").bind("ajax:beforeSend", function() {
+          $("#results").html("Processing request.");
+          $(".actions").hide();
+
+      });
+      $(".new_section").bind("ajax:success", function() {
+          $("#results").html("Product added successfully");
+          clearmodal();
+          $('#load').load(document.URL +  ' #load');
+
+
+          $('#testnow').data('bs.modal', null);
+          $('#new_modal').data('bs.modal', null);
+          $('#testnow').modal('hide');
+          $("#results").hide();
+          $(".actions").show();
+
+      });
+      $(".new_section").bind("ajax:error", function() {
+          $("#results").html("Error has occurred. Please try again");
+          $(".actions").show();
+      });
+  </script>

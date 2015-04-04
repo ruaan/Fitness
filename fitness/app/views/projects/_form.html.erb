@@ -1,0 +1,75 @@
+<%= form_for(@project) do |f| %>
+  <% if @project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+      <% @project.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+   <div class="field">
+     <%= f.label "Customer Name:" %><br>
+     <%= f.select(:account_id, Account.where(:user_id => current_user.id).order("id DESC").all.map {|p|[p.name,p.id]}.uniq) %></br>
+
+
+   </div>
+  <div class="field">
+    <%= f.label "Project Name:" %><br>
+    <%= f.text_field :projectName, required:true %>
+  </div>
+    <% if @project.sapCode.present? %>
+    <div class="field sap">
+      <%= f.label "SAP Quote Number:" %><br>
+      <%= @project.sapCode %>
+    </div>
+    <% end %>
+    <%= f.hidden_field :version, :value => 1 %>
+
+    <div class="field">
+      <%= f.label "Excluding Vat:" %><br>
+      <%= f.check_box :exvat %>
+    </div>
+
+  <div class="field">
+    <%= f.label "Rand Dollar Exhange Rate:" %><br>
+    <%= f.text_field :randDollar %>
+  </div>
+  <div class="field">
+    <%= f.label "Rand Euro Exhange Rate:" %><br>
+    <%= f.text_field :randPound , :class => "validate[required] textinput" %>
+  </div>
+  <div class="field">
+    <%= f.label :address %><br>
+    <%= f.text_field :address %>
+  </div>
+  <div class="field">
+    <%= f.label "Contact Person:" %><br>
+    <%= f.text_field :contactPerson %>
+  </div>
+  <div class="field">
+    <%= f.label "Contact Numer:" %><br>
+    <%= f.text_field :contactNumber %>
+  </div>
+  <div class="field">
+    <%= f.label :notes %><br>
+    <%= f.text_field :notes %>
+  </div>
+    <%= f.hidden_field :flag, :value => 1 %>
+
+  <div class="actions">
+    <%= f.submit "Save Project" %>
+  </div>
+<% end %>
+<script>
+    function account() {
+        $(".modal-body").html("<%= escape_javascript(render 'accounts/form') %>");
+        $("#myModalLabel").html("Add New Customer");
+
+    }
+
+</script>

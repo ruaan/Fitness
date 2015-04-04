@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="clearmodal();" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Edit Section</h4>
+</div>
+<div class="modal-body">
+<%= form_for(@section, remote: true) do |f| %>
+    <% if @section.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@section.errors.count, "error") %> prohibited this section from being saved:</h2>
+
+          <ul>
+            <% @section.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+
+    <div class="field">
+      <%= f.label "Section Name:" %> <br>
+      <%= f.text_field :name %><p>E.g. First Floor</p>
+    </div>
+    <div class="field">
+      <%= f.label "Description:" %><br>
+      <%= f.text_field :description %>
+    </div>
+
+
+        <div class="actions">
+            <button type="button" onclick="clearmodal();" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            <%= f.submit  "Update Section." , :class => "btn btn-primary"%>
+          </div>
+        </div>
+<% end %>

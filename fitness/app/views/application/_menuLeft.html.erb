@@ -1,0 +1,570 @@
+
+<div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left">
+<div id="tabs" class="row">
+<div class="col-sm-2 right mainright" >
+<div class="menu-close hidden" onclick="clearmodal();" href="#close" ><i class="fa fa-times fa-2x"></i></div>
+  <ul class="topspace">
+
+    <li class="icons">
+      <a class="toggle-menu menu-left product" href="#product" ><i class="fa fa-shopping-cart fa-2x"></i><div class="side-menu-item-caption">Products</div></a>
+    </li>
+
+
+    <li class="icons">
+      <a class="toggle-menu menu-left customer" href="#customer" ><i class="fa fa-users fa-2x"></i><div class="side-menu-item-caption">Customer</div></a>
+    </li>
+
+    <% if can? :update , @project %>
+        <li class="icons">
+          <a class="toggle-menu menu-left project" href="#project" ><i class="fa fa-file-text fa-2x"></i><div class="side-menu-item-caption">Project</div></a>
+        </li>
+    <% end %>
+    <li class="icons">
+      <a class="print" onclick="redirect();" ><i class="fa fa-th-large fa-2x"></i><div class="side-menu-item-caption">Dashboard</div></a>
+    </li>
+
+  </ul>
+</div>
+<div class="col-sm-10 left">
+<div id="product">
+  <h3 style="margin-left: -20px;margin-right:-5px;">Products</h3>
+<ul class="nav nav-tabs" role="tablist" id="myTab">
+  <li><a href="#tiles" role="tab" data-toggle="tab" >Tiles</a></li>
+  <li><a href="#taps" role="tab" data-toggle="tab">Taps</a></li>
+  <li><a href="#accessories" role="tab" data-toggle="tab">Accessories</a></li>
+  <li><a href="#sanitary" role="tab" data-toggle="tab">Sanitary ware</a></li>
+  <li><a href="#decor" role="tab" data-toggle="tab">Decor</a></li>
+  <li><a href="#furniture" role="tab" data-toggle="tab">Furniture</a></li>
+  <li><a href="#showers" role="tab" data-toggle="tab">Showers</a></li>
+  <li><a href="#other" role="tab" data-toggle="tab">Other</a></li>
+  <li class="active"><a href="#all" role="tab" data-toggle="tab" class="active">All</a></li>
+
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="all">
+  <br/>
+ <%= form_tag "/projects/#{@project.id}", :method => 'get', :id => "products_search" do %>
+   <p>
+     <%= text_field_tag :search, params[:search] %>
+     <%= submit_tag "Search", :name => nil %>
+   </p>
+ <% end %>
+
+    <div id="products" class="wrapperScroll">
+  <div id="all" class="all">
+
+    <% @products.each do |product| %>
+
+
+            <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style=" visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+
+    <%end %>
+            </div>
+    </div>
+</div>
+<div class="tab-pane" id="tiles">
+  <br/>
+  <br/>
+
+  <p><input type="text" id="searchTiles" name="search" onkeypress="checkInput('searchTiles');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+  <div class="tiles">
+
+    <% @products.each do |product| %>
+        <% if product.catagory == '50' || product.catagory == '63' || product.catagory == '64' || product.catagory == '65' || product.catagory == '66' || product.catagory == '119' %>
+
+            <% @mprice = (product.price) * (product.umren.to_f / product.umrez)%>
+            
+            <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style=" visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+  <% else %>
+        <% end %>
+    <% end %>
+
+    </div>
+    </div>
+</div>
+<div class="tab-pane" id="taps">
+  <br/>
+  <br/>
+  <p><input type="text" id="searchTaps" name="search" onkeypress="checkInput('searchTaps');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+  <div class="tiles">
+
+    <% @products.each do |product| %>
+        <% if product.catagory == '55' || product.catagory == '62' %>
+
+          <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                    <span style=" visibility: hidden;">
+                    <%= product.size %>
+                      <%= product.manufacturer %>
+                      <%= product.finish %>
+                      <%= product.color %>
+                      <%= product.range %>
+                      <%= product.material %>
+                  </span>
+                  </div>
+
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+  <% else %>
+        <% end %>
+    <% end %>
+
+    </div>
+    </div>
+</div>
+<div class="tab-pane" id="sanitary">
+  <br/>
+  <br/>
+
+  <p><input type="text" id="searchSanitary" name="search" onkeypress="checkInput('searchSanitary');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+  <div class="tiles">
+
+    <% @products.each do |product| %>
+        <% if product.catagory == "52" || product.catagory == "53" || product.catagory == "54" || product.catagory == "55" %>
+
+          <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style=" visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+          <% else %>
+        <% end %>
+    <% end %>
+
+    </div>
+    </div>
+</div>
+
+<div class="tab-pane" id="accessories">
+  <br/>
+  <br/>
+  <p><input type="text" id="searchAccessories" name="search" onkeypress="checkInput('searchAccessories');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+    <div class="tiles">
+
+      <% @allAccproducts = Product.where(catagory:"57").all %>
+      <% @allAccproducts.each do |product| %>
+
+          <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style=" visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+      <% end %>
+
+      </div>
+    </div>
+</div>
+<div class="tab-pane" id="decor">
+  <br/>
+  <br/>
+
+  <p><input type="text" id="searchDecor" name="search" onkeypress="checkInput('searchDecor');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+    <div class="tiles">
+      <% @products.each do |product| %>
+          <% if product.catagory == "51" || product.catagory == '67' || product.catagory == '68' || product.catagory == '69' || product.catagory == '70' || product.catagory == '71' || product.catagory == '72' || product.catagory == '73' %>
+              
+              <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style=" visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+          <% else %>
+          <% end %>
+      <% end %>
+      </div>
+    </div>
+</div>
+<div class="tab-pane" id="furniture">
+  <br/>
+  <br/>
+
+  <p><input type="text" id="searchFurniture" name="search" onkeypress="checkInput('searchFurniture');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+    <div class="tiles">
+
+      <% @allFurproducts = Product.where(catagory:"58").all %>
+      <% @allFurproducts.each do |product| %>
+
+          <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style=" visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+    <% end %>
+
+      </div>
+    </div>
+</div>
+<div class="tab-pane" id="showers">
+  <br/>
+  <br/>
+
+  <p><input type="text" id="searchShowers" name="search" onkeypress="checkInput('searchShowers');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+    <div class="tiles">
+
+      <% @alltilesproducts = Product.where(catagory:"56").all %>
+      <% @alltilesproducts.each do |product| %>
+            
+          <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style="visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+    <% end %>
+
+      </div>
+    </div>
+</div>
+<div class="tab-pane" id="other">
+  <br/>
+  <br/>
+
+  <p><input type="text" id="searchOther" name="search" onkeypress="checkInput('searchOther');"  placeholder="Search Products" /></p>
+  <div class="wrapperScroll">
+    <div class="tiles">
+      <% @allproducts = Product.where(catagory:"130").all %>
+    <% @allproducts.each do |product| %>
+
+          <div class="search-items">
+              <ul class="row">
+                <li class="col-md-2">
+                  <%= image_tag(product.image, :width => 50) if product.image.present? %>
+                </li>
+                <li class="col-md-7">
+                  <strong><%= product.title %></strong><br />
+                  <div class="small">
+                    <%= product.sku%> <strong>&nbsp;|&nbsp;</strong>
+                    <% if @mprice && @mrprice != nil %>
+                      <%= number_to_currency(@mrprice, unit: "R") %>
+                    <% else %>
+                      <%= number_to_currency(product.price, unit: "R") %>
+                    <% end %>
+                    <br /><%= product.buom %>
+                  </div>
+                  <div style="visibility: hidden;">
+                    <%= product.size %>
+                    <%= product.manufacturer %>
+                    <%= product.finish %>
+                    <%= product.color %>
+                    <%= product.range %>
+                    <%= product.material %>
+                  </div>
+                </li>
+                <li class="col-md-3">
+                  <%= link_to 'Add',  edit_product_path(product.id, :project_id => @project.id), 'data-target' => "#testnow", 'data-toggle' => 'modal', :class =>"btn btn-primary btn-xs thin" %>
+                </li>
+              </ul>
+            </div>
+
+    <% end %>
+
+    </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+  <% if can? :update , @project %>
+      <div id="project">
+        <h3 style="margin-left: -20px;margin-right:-5px;">Project Details</h3>
+
+        <br/>
+
+        <%= render 'projects/form' %>
+      </div>
+    <% end %>
+  <div id="customer">
+    <h3 style="margin-left: -20px;margin-right:-5px;">Customer Details</h3>
+    <br/>
+    <% if @project.flag == 1 %>
+
+  <ul class="nav nav-tabs" role="tablist" id="customerTab" style="height:50px;">
+
+    <li class="active"><a href="#editCustomer" role="tab" data-toggle="tab">Edit Customer</a></li>
+    <li><a href="#newCustomer" role="tab" data-toggle="tab" >New Customer</a></li>
+  </ul>
+  <div class="tab-content">
+
+  <% @accounts.each do |account| %>
+      <% account.id %>
+      <% @project.account_id %>
+      <% if account.id == @project.account_id %>
+              <div class="tab-pane active" id="editCustomer">
+            <br/>
+            <h4>Change Customer Details</h4>
+          <%= render 'accounts/edit', account: account %>
+
+          </div>
+      <% else %>
+            <div class="tab-pane" id="newCustomer">
+            <br/>
+            <h4>Add Customer Details</h4>
+            <%= render 'accounts/form' %>
+
+          </div>
+      <% end %>
+
+  <% end %>
+
+    <% else %>
+        <br/>
+        <h4>Add Customer Details</h4>
+        <%= render 'accounts/form' %>
+    <% end %>
+    <br/>
+    <br/>
+      <% if can? :manage , @projects %>
+          <%= image_tag "/comlogo.jpg"%>
+      <% else %>
+
+      <% end %>
+        </div>
+        </div>
+
+
+        </div>
+    </div>
+</div>
+<script>
+    function checkInput(textbox) {
+        var textInput = document.getElementById(textbox).value;
+        $.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
+            return function( elem ) {
+                return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+            };
+        });
+
+        if (textInput == "") {
+            $(".search-items").show();
+            $(".search-items").next().show();
+        }
+        else {
+            $(".search-items").hide();
+            $(".search-items:Contains('" + textInput + "')").show();
+            $(".search-items:Contains('" + textInput + "')").next().show();
+            //$(".thin").show();
+            $(".search-items:Contains('" + textInput + "')").next().next().show();
+        }
+    }
+    $('#myTab li').click(function() {
+        $(".search-items").show();
+    });
+    function redirect(){window.location.href = '/welcome/index'}
+</script>
+
+

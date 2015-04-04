@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <button type="button" class="close" onclick="clearmodal()" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" id="myModalLabel">Save Favourite</h4>
+</div>
+<div class="modal-body">
+<%= form_for(@global) do |f| %>
+  <% if @global.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@global.errors.count, "error") %> prohibited this global from being saved:</h2>
+
+      <ul>
+      <% @global.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+
+    <%= f.hidden_field :section_id, :value => params[:section_id] %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+
+        <div class="actions">
+            <button type="button" onclick="clearmodal();" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            <%= f.submit  "Save Favourite" , :class => "btn btn-primary"%>
+
+        </div>
+      </div>
+</div>
+
+<% end %>
